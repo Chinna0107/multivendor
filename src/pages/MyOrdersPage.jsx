@@ -102,7 +102,7 @@ export function MyOrdersPage() {
                           <div style="font-size: 9pt; color: #555555; margin-top: 8px; line-height: 1.5;">
                               <strong style="font-size: 20px;">Moksha Mandir</strong><br>
                               GSTIN: 36BANPK1643M1ZC<br>
-                              Phone: +91 9848397379 | Email: sakethkotha48@gmail.com<br>
+                              Phone: +91 9848397379 | Email: mokshamandir542@gmail.com<br>
                           </div>
                       </td>
                       <td class="invoice-title-block">
@@ -155,14 +155,15 @@ export function MyOrdersPage() {
               </tbody>
           </table>
 
-          <table class="totals-table">
-              <tr>
-                  <td class="terms-cell"></td>
-                  <td class="summary-cell">
-                      <table class="inner-summary-table">
-                          <tr><td class="label">Subtotal</td><td class="value">₹${subtotal.toFixed(2)}</td></tr>
-                          <tr class="grand-total"><td class="label">TOTAL PAYABLE:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
-                      </table>
+      <table class="totals-table">
+          <tr>
+              <td class="terms-cell"></td>
+              <td class="summary-cell">
+                  <table class="inner-summary-table">
+                      <tr><td class="label">Subtotal</td><td class="value">₹${subtotal.toFixed(2)}</td></tr>
+                      ${Number(order.total) - subtotal > 0 ? `<tr><td class="label">Delivery Charges</td><td class="value">₹${(Number(order.total) - subtotal).toFixed(2)}</td></tr>` : ''}
+                      <tr class="grand-total"><td class="label">TOTAL PAYABLE:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
+                  </table>
                   </td>
               </tr>
           </table>

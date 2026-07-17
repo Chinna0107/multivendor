@@ -22,6 +22,17 @@ export function ProductDetailPage() {
   
   const container = useRef(null);
 
+  const productImages = product ? ((product.images && product.images.length > 0) 
+    ? product.images 
+    : (product.image_url ? [product.image_url] : [])) : [];
+    
+  const [mainImg, setMainImg] = useState(null);
+
+  useEffect(() => {
+    if (productImages.length > 0 && !mainImg) {
+      setMainImg(productImages[0]);
+    }
+  }, [productImages, mainImg]);
   useEffect(() => {
     if (product && product.sizes && product.sizes.length > 0 && !selectedSize) {
       setSelectedSize(product.sizes[0]);
@@ -84,17 +95,6 @@ export function ProductDetailPage() {
     { label: 'Traditional', icon: Sun },
   ];
 
-  const productImages = (product.images && product.images.length > 0) 
-    ? product.images 
-    : (product.image_url ? [product.image_url] : []);
-    
-  const [mainImg, setMainImg] = useState(null);
-
-  useEffect(() => {
-    if (productImages.length > 0 && !mainImg) {
-      setMainImg(productImages[0]);
-    }
-  }, [productImages, mainImg]);
 
   return (
     <div ref={container} className="min-h-screen bg-gray-50 pb-28">

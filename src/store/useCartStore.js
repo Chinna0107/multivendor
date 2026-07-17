@@ -6,7 +6,7 @@ export const useCartStore = create(
   persist(
     (set, get) => ({
       items: [],
-      deliveryCharge: 40,
+      deliveryCharge: 1,
       
       addToCart: (product, variant, qty = 1) => {
         set((state) => {
@@ -72,6 +72,11 @@ export const useCartStore = create(
     }),
     {
       name: 'pooja-cart-storage',
+      merge: (persistedState, currentState) => ({
+        ...currentState,
+        ...persistedState,
+        deliveryCharge: 1
+      })
     }
   )
 );

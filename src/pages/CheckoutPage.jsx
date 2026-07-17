@@ -24,7 +24,7 @@ export function CheckoutPage() {
     pincode: '500001',
     mobile: user?.phone || '9876543210'
   });
-  const [paymentMethod, setPaymentMethod] = useState('cod');
+  const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   
   const overlayRef = useRef(null);
@@ -62,38 +62,118 @@ export function CheckoutPage() {
     }
   }, { dependencies: [isPlacingOrder] });
 
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
     try {
-      const payload = {
-        items,
-        address,
-        total: grandTotal,
-        coupon_code: couponCode
+      const res = await loadRazorpay();
+      if (!res) {
+        alert("Razorpay SDK failed to load. Are you online?");
+        setIsPlacingOrder(false);
+        return;
+      }
+
+      // Create Razorpay Order
+      const orderRes = await fetch(`${BACKEND_URL}/general/razorpay/order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: grandTotal })
+      });
+      const orderData = await orderRes.json();
+      
+      if (!orderData.success) {
+        alert("Failed to initialize payment");
+        setIsPlacingOrder(false);
+        return;
+      }
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: "Tradition Store",
+        description: "Order Payment",
+        order_id: orderData.order.id,
+        handler: async function (response) {
+          try {
+            // Verify payment
+            const verifyRes = await fetch(`${BACKEND_URL}/general/razorpay/verify`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            });
+            const verifyData = await verifyRes.json();
+            
+            if (verifyData.success) {
+              // Proceed to actual order creation
+              const payload = {
+                items,
+                address,
+                total: grandTotal,
+                coupon_code: couponCode
+              };
+
+              const endpoint = token ? `${BACKEND_URL}/auth/orders` : `${BACKEND_URL}/general/orders`;
+              const headers = { "Content-Type": "application/json" };
+              if (token) {
+                headers["Authorization"] = `Bearer ${token}`;
+              }
+
+              const createOrderRes = await fetch(endpoint, {
+                method: "POST",
+                headers,
+                body: JSON.stringify(payload)
+              });
+              const createOrderData = await createOrderRes.json();
+              
+              if (createOrderData.success) {
+                setTimeout(() => {
+                  clearCart();
+                  navigate(`/order-tracking/${createOrderData.order.order_number}`);
+                }, 2000);
+              } else {
+                alert("Failed to place order after payment.");
+                setIsPlacingOrder(false);
+              }
+            } else {
+              alert("Payment verification failed");
+              setIsPlacingOrder(false);
+            }
+          } catch(err) {
+            console.error(err);
+            setIsPlacingOrder(false);
+          }
+        },
+        prefill: {
+          name: address.name,
+          contact: address.mobile
+        },
+        theme: {
+          color: "#C16E4F"
+        },
+        modal: {
+          ondismiss: function() {
+            setIsPlacingOrder(false);
+          }
+        }
       };
 
-      const endpoint = token ? `${BACKEND_URL}/auth/orders` : `${BACKEND_URL}/general/orders`;
-      const headers = { "Content-Type": "application/json" };
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
       
-      if (data.success) {
-        setTimeout(() => {
-          clearCart();
-          navigate(`/order-tracking/${data.order.order_number}`);
-        }, 2000);
-      } else {
-        alert("Failed to place order.");
-        setIsPlacingOrder(false);
-      }
     } catch (err) {
       console.error(err);
       setIsPlacingOrder(false);
@@ -243,9 +323,7 @@ export function CheckoutPage() {
             <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
               <div className="space-y-4">
                 {[
-                  { id: 'cod', label: 'Cash on Delivery', desc: 'Pay when you receive' },
-                  { id: 'upi', label: 'UPI / QR', desc: 'GPay, PhonePe, Paytm (Mock)' },
-                  { id: 'card', label: 'Credit / Debit Card', desc: 'Visa, Mastercard, Rupay (Mock)' }
+                  { id: 'razorpay', label: 'Online Payment', desc: 'Credit/Debit Card, UPI, NetBanking' }
                 ].map((method) => (
                   <label key={method.id} className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === method.id ? 'border-brand-orange bg-orange-50/50 shadow-sm' : 'border-gray-50 hover:border-gray-200 bg-gray-50/50'}`}>
                     <div className="flex-1">
