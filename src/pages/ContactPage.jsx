@@ -45,7 +45,7 @@ export function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-gray-900 mb-1">Phone & WhatsApp</h3>
-                  <p className="text-sm text-gray-600">+91 9848397379</p>
+                  <p className="text-sm text-gray-600">+91 90326 75205 </p>
                   <p className="text-xs text-gray-500 mt-1">Mon-Sat, 9:00 AM - 6:00 PM</p>
                 </div>
               </div>

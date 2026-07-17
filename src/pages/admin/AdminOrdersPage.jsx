@@ -10,7 +10,7 @@ const FROM_ADDRESS = {
   city: "Koratla",
   state: "Telangana",
   pincode: "",
-  phone: "+91 9848397379",
+  phone: "+91 90326 75205",
 };
 
 const STATUSES = ["pending", "paid", "processing", "shipped", "delivered", "cancelled"];
@@ -175,7 +175,7 @@ export function AdminOrdersPage() {
                           <div style="font-size: 9pt; color: #555555; margin-top: 8px; line-height: 1.5;">
                               <strong style="font-size: 20px;">Moksha Mandir</strong><br>
                               GSTIN: 36BANPK1643M1ZC<br>
-                              Phone: +91 9848397379 | Email: mokshamandir542@gmail.com<br>
+                              Phone: +91 90326 75205 | Email: mokshamandir542@gmail.com<br>
                           </div>
                       </td>
                       <td class="invoice-title-block">
@@ -198,7 +198,7 @@ export function AdminOrdersPage() {
                           <strong>Moksha Mandir</strong><br>
                           1-1-738, Vinayaka temple road,<br>
                           Koratla, Telangana, India<br>
-                          <strong>Phone:</strong> +91 9848397379
+                          <strong>Phone:</strong> +91 90326 75205
                       </div>
                   </td>
                   <td class="ship-box">
