@@ -235,7 +235,9 @@ export function AdminOrdersPage() {
                   <table class="inner-summary-table">
                       <tr><td class="label">Subtotal</td><td class="value">₹${subtotal.toFixed(2)}</td></tr>
                       ${Number(order.total) - subtotal > 0 ? `<tr><td class="label">Delivery Charges</td><td class="value">₹${(Number(order.total) - subtotal).toFixed(2)}</td></tr>` : ''}
-                      <tr class="grand-total"><td class="label">TOTAL PAYABLE:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
+                      <tr class="grand-total"><td class="label">TOTAL:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
+                      ${order.payment_method === 'cod' ? `<tr><td class="label" style="color: #059669; font-size: 9pt;">Advance Paid (Online)</td><td class="value" style="color: #059669; font-size: 9pt;">-₹${Number(order.advance_paid || 0).toFixed(2)}</td></tr>
+                      <tr class="grand-total" style="background-color: #ecfdf5; border-color: #059669; color: #059669;"><td class="label" style="color: #059669;">CASH TO COLLECT:</td><td class="value">₹${(Number(order.total) - Number(order.advance_paid || 0)).toFixed(2)}</td></tr>` : ''}
                   </table>
                   </td>
               </tr>
@@ -407,6 +409,11 @@ export function AdminOrdersPage() {
                     <span className={`text-[9px] sm:text-[10px] font-bold font-sans px-2 py-0.5 rounded-full ${STATUS_COLORS[order.status] || "bg-[#FDFBF7] text-gray-500"}`}>
                       {order.status}
                     </span>
+                    {order.payment_method === 'cod' && (
+                      <span className="text-[9px] sm:text-[10px] font-bold font-sans px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                        COD (₹{order.total - (order.advance_paid || 0)} Pending)
+                      </span>
+                    )}
                   </div>
                   <p className="text-[#5C4033]/60 text-[10px] sm:text-xs font-sans mt-0.5 truncate">
                     {order.user_name || "Guest"}

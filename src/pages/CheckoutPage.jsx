@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShieldCheck, Truck, CheckCircle, MapPin, CreditCard, ChevronLeft, UserCircle2 } from 'lucide-react';
+import { ShieldCheck, Truck, CheckCircle, MapPin, CreditCard, ChevronLeft, UserCircle2, Banknote, Info } from 'lucide-react';
 import { Header } from '../components/Header';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -72,26 +72,50 @@ export function CheckoutPage() {
     });
   };
 
+  const COD_ADVANCE = 100;
+  const codRemaining = grandTotal - COD_ADVANCE;
+
+  const createOrder = async (pMethod) => {
+    const endpoint = token ? `${BACKEND_URL}/auth/orders` : `${BACKEND_URL}/general/orders`;
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        items,
+        address,
+        total: grandTotal,
+        coupon_code: couponCode,
+        payment_method: pMethod,
+      })
+    });
+    return res.json();
+  };
+
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
     try {
       const res = await loadRazorpay();
       if (!res) {
-        alert("Razorpay SDK failed to load. Are you online?");
+        alert('Razorpay SDK failed to load. Are you online?');
         setIsPlacingOrder(false);
         return;
       }
+
+      // Amount to charge online: ₹100 for COD, full amount for prepaid
+      const chargeAmount = paymentMethod === 'cod' ? COD_ADVANCE : grandTotal;
 
       // Create Razorpay Order
       const orderRes = await fetch(`${BACKEND_URL}/general/razorpay/order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: grandTotal })
+        body: JSON.stringify({ amount: chargeAmount })
       });
       const orderData = await orderRes.json();
-      
+
       if (!orderData.success) {
-        alert("Failed to initialize payment");
+        alert('Failed to initialize payment');
         setIsPlacingOrder(false);
         return;
       }
@@ -100,8 +124,10 @@ export function CheckoutPage() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.order.amount,
         currency: orderData.order.currency,
-        name: "Tradition Store",
-        description: "Order Payment",
+        name: 'Tradition Store',
+        description: paymentMethod === 'cod'
+          ? `COD Advance Payment (₹${COD_ADVANCE})`
+          : 'Order Payment',
         order_id: orderData.order.id,
         handler: async function (response) {
           try {
@@ -116,43 +142,23 @@ export function CheckoutPage() {
               })
             });
             const verifyData = await verifyRes.json();
-            
+
             if (verifyData.success) {
-              // Proceed to actual order creation
-              const payload = {
-                items,
-                address,
-                total: grandTotal,
-                coupon_code: couponCode
-              };
-
-              const endpoint = token ? `${BACKEND_URL}/auth/orders` : `${BACKEND_URL}/general/orders`;
-              const headers = { "Content-Type": "application/json" };
-              if (token) {
-                headers["Authorization"] = `Bearer ${token}`;
-              }
-
-              const createOrderRes = await fetch(endpoint, {
-                method: "POST",
-                headers,
-                body: JSON.stringify(payload)
-              });
-              const createOrderData = await createOrderRes.json();
-              
+              const createOrderData = await createOrder(paymentMethod);
               if (createOrderData.success) {
                 setTimeout(() => {
                   clearCart();
                   navigate(`/order-tracking/${createOrderData.order.order_number}`);
                 }, 2000);
               } else {
-                alert("Failed to place order after payment.");
+                alert('Failed to place order after payment.');
                 setIsPlacingOrder(false);
               }
             } else {
-              alert("Payment verification failed");
+              alert('Payment verification failed');
               setIsPlacingOrder(false);
             }
-          } catch(err) {
+          } catch (err) {
             console.error(err);
             setIsPlacingOrder(false);
           }
@@ -161,11 +167,9 @@ export function CheckoutPage() {
           name: address.name,
           contact: address.mobile
         },
-        theme: {
-          color: "#C16E4F"
-        },
+        theme: { color: '#C16E4F' },
         modal: {
-          ondismiss: function() {
+          ondismiss: function () {
             setIsPlacingOrder(false);
           }
         }
@@ -173,7 +177,6 @@ export function CheckoutPage() {
 
       const paymentObject = new window.Razorpay(options);
       paymentObject.open();
-      
     } catch (err) {
       console.error(err);
       setIsPlacingOrder(false);
@@ -319,24 +322,63 @@ export function CheckoutPage() {
               </div>
               Payment Method
             </h2>
-            
+
             <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-              <div className="space-y-4">
-                {[
-                  { id: 'razorpay', label: 'Online Payment', desc: 'Credit/Debit Card, UPI, NetBanking' }
-                ].map((method) => (
-                  <label key={method.id} className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === method.id ? 'border-brand-orange bg-orange-50/50 shadow-sm' : 'border-gray-50 hover:border-gray-200 bg-gray-50/50'}`}>
-                    <div className="flex-1">
-                      <span className="text-base font-bold text-gray-900 block">{method.label}</span>
-                      <span className="text-xs text-gray-500">{method.desc}</span>
-                    </div>
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${paymentMethod === method.id ? 'border-brand-orange' : 'border-gray-300'}`}>
-                      {paymentMethod === method.id && <div className="w-2.5 h-2.5 bg-brand-orange rounded-full" />}
-                    </div>
-                  </label>
-                ))}
+              <div className="space-y-3">
+                {/* Online Payment */}
+                <label className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'razorpay' ? 'border-brand-orange bg-orange-50/50 shadow-sm' : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'}`}>
+                  <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mr-3 shrink-0">
+                    <CreditCard className="w-5 h-5 text-blue-500" />
+                  </div>
+                  <div className="flex-1" onClick={() => setPaymentMethod('razorpay')}>
+                    <span className="text-base font-bold text-gray-900 block">Online Payment</span>
+                    <span className="text-xs text-gray-500">Credit/Debit Card, UPI, NetBanking</span>
+                  </div>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="razorpay"
+                    checked={paymentMethod === 'razorpay'}
+                    onChange={() => setPaymentMethod('razorpay')}
+                    className="w-4 h-4 accent-brand-orange"
+                  />
+                </label>
+
+                {/* COD */}
+                <label className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-emerald-500 bg-emerald-50/50 shadow-sm' : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'}`}>
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 flex items-center justify-center mr-3 shrink-0">
+                    <Banknote className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div className="flex-1" onClick={() => setPaymentMethod('cod')}>
+                    <span className="text-base font-bold text-gray-900 block">Cash on Delivery</span>
+                    <span className="text-xs text-gray-500">Pay ₹100 now + ₹{Math.max(0, codRemaining).toFixed(0)} at your door</span>
+                  </div>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="cod"
+                    checked={paymentMethod === 'cod'}
+                    onChange={() => setPaymentMethod('cod')}
+                    className="w-4 h-4 accent-emerald-500"
+                  />
+                </label>
               </div>
             </div>
+
+            {/* COD Info Banner */}
+            {paymentMethod === 'cod' && (
+              <div className="flex gap-3 bg-emerald-50 border border-emerald-200 rounded-2xl p-4">
+                <Info className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-bold text-emerald-800">How COD works</p>
+                  <ul className="mt-1 space-y-1">
+                    <li className="text-xs text-emerald-700">✓ Pay <strong>₹{COD_ADVANCE}</strong> advance online now (via Razorpay)</li>
+                    <li className="text-xs text-emerald-700">✓ Remaining <strong>₹{Math.max(0, codRemaining).toFixed(0)}</strong> is collected at your door by the delivery person</li>
+                    <li className="text-xs text-emerald-700">✓ Your order will be confirmed instantly after the ₹100 advance</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>          {/* Right Column: Order Summary (Desktop) */}
@@ -381,16 +423,26 @@ export function CheckoutPage() {
                   Proceed to Payment
                 </button>
               ) : (
-                <button 
+                <button
                   onClick={handlePlaceOrder}
                   disabled={isPlacingOrder}
-                  className={`w-full bg-gradient-to-r from-brand-orange to-brand-maroon text-white font-bold text-base rounded-xl py-4 shadow-lg flex items-center justify-center transition-all ${isPlacingOrder ? 'opacity-70 cursor-not-allowed shadow-none' : 'shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5'}`}
+                  className={`w-full text-white font-bold text-base rounded-xl py-4 shadow-lg flex items-center justify-center gap-2 transition-all ${
+                    isPlacingOrder ? 'opacity-70 cursor-not-allowed shadow-none bg-gray-400' :
+                    paymentMethod === 'cod'
+                      ? 'bg-gradient-to-r from-emerald-500 to-emerald-700 hover:shadow-xl hover:-translate-y-0.5 shadow-emerald-200'
+                      : 'bg-gradient-to-r from-brand-orange to-brand-maroon shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5'
+                  }`}
                 >
                   {isPlacingOrder ? (
                     <div className="flex items-center gap-2">
                       <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                       Placing Order...
                     </div>
+                  ) : paymentMethod === 'cod' ? (
+                    <>
+                      <Banknote className="w-5 h-5" />
+                      Pay ₹{COD_ADVANCE} Advance & Place Order
+                    </>
                   ) : 'Confirm & Pay'}
                 </button>
               )}
@@ -409,8 +461,18 @@ export function CheckoutPage() {
         <div className="max-w-5xl mx-auto">
           <div className="flex items-end justify-between mb-4">
             <div>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Payable Amount</p>
-              <p className="text-2xl font-bold text-gray-900 leading-none">₹{grandTotal.toFixed(2)}</p>
+              {step === 3 && paymentMethod === 'cod' ? (
+                <>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Pay Now (Advance)</p>
+                  <p className="text-2xl font-bold text-emerald-600 leading-none">₹{COD_ADVANCE}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">+ ₹{Math.max(0, codRemaining).toFixed(0)} at delivery</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Payable Amount</p>
+                  <p className="text-2xl font-bold text-gray-900 leading-none">₹{grandTotal.toFixed(2)}</p>
+                </>
+              )}
             </div>
           </div>
           
@@ -431,16 +493,26 @@ export function CheckoutPage() {
               Step 3
             </button>
           ) : (
-            <button 
+            <button
               onClick={handlePlaceOrder}
               disabled={isPlacingOrder}
-              className={`w-full bg-gradient-to-r from-brand-orange to-brand-maroon text-white font-bold text-base rounded-xl py-4 shadow-lg flex items-center justify-center transition-all ${isPlacingOrder ? 'opacity-70 cursor-not-allowed shadow-none' : 'shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5'}`}
+              className={`w-full text-white font-bold text-base rounded-xl py-4 shadow-lg flex items-center justify-center gap-2 transition-all ${
+                isPlacingOrder ? 'opacity-70 cursor-not-allowed shadow-none bg-gray-400' :
+                paymentMethod === 'cod'
+                  ? 'bg-gradient-to-r from-emerald-500 to-emerald-700 shadow-emerald-200 hover:shadow-xl hover:-translate-y-0.5'
+                  : 'bg-gradient-to-r from-brand-orange to-brand-maroon shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5'
+              }`}
             >
               {isPlacingOrder ? (
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   Placing Order...
                 </div>
+              ) : paymentMethod === 'cod' ? (
+                <>
+                  <Banknote className="w-5 h-5" />
+                  Pay ₹{COD_ADVANCE} Advance & Place Order
+                </>
               ) : 'Confirm Order'}
             </button>
           )}

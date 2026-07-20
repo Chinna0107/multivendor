@@ -162,7 +162,9 @@ export function MyOrdersPage() {
                   <table class="inner-summary-table">
                       <tr><td class="label">Subtotal</td><td class="value">₹${subtotal.toFixed(2)}</td></tr>
                       ${Number(order.total) - subtotal > 0 ? `<tr><td class="label">Delivery Charges</td><td class="value">₹${(Number(order.total) - subtotal).toFixed(2)}</td></tr>` : ''}
-                      <tr class="grand-total"><td class="label">TOTAL PAYABLE:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
+                      <tr class="grand-total"><td class="label">TOTAL:</td><td class="value">₹${Number(order.total).toFixed(2)}</td></tr>
+                      ${order.payment_method === 'cod' ? `<tr><td class="label" style="color: #059669; font-size: 9pt;">Advance Paid (Online)</td><td class="value" style="color: #059669; font-size: 9pt;">-₹${Number(order.advance_paid || 0).toFixed(2)}</td></tr>
+                      <tr class="grand-total" style="background-color: #ecfdf5; border-color: #059669; color: #059669;"><td class="label" style="color: #059669;">CASH TO COLLECT:</td><td class="value">₹${(Number(order.total) - Number(order.advance_paid || 0)).toFixed(2)}</td></tr>` : ''}
                   </table>
                   </td>
               </tr>
@@ -238,6 +240,11 @@ export function MyOrdersPage() {
                     <span className={`text-xs font-bold px-4 py-1.5 rounded-full border capitalize shadow-sm ${STATUS_COLORS[order.status] || 'bg-gray-100 text-gray-600 border-gray-200'}`}>
                       {order.status}
                     </span>
+                    {order.payment_method === 'cod' && (
+                      <span className="text-xs font-bold px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+                        COD (₹{order.total - (order.advance_paid || 0)} pending)
+                      </span>
+                    )}
                     <p className="text-lg font-bold text-[#D4AF37]">₹{Number(order.total).toLocaleString('en-IN')}</p>
                   </div>
                 </div>
