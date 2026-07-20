@@ -57,7 +57,7 @@ export function SignupPage() {
             <Flower2 className="w-7 h-7 text-brand-orange" />
           </div>
           <h1 className="text-xl font-bold text-gray-900">Create Account</h1>
-          <p className="text-xs text-gray-500 mt-1">Join Moksha Mandir</p>
+          <p className="text-xs text-gray-500 mt-1">Join Indbasket</p>
         </div>
 
         {step === 'form' ? (

@@ -64,8 +64,8 @@ export function CartPage() {
           {/* Step Indicator */}
           <div className="flex justify-between items-center mb-2 px-2">
             <div className="flex flex-col items-center">
-              <div className="w-6 h-6 rounded-full bg-[#C16E4F] text-white flex items-center justify-center text-xs font-bold">1</div>
-              <span className="text-[10px] text-[#C16E4F] font-bold mt-1">Cart</span>
+              <div className="w-6 h-6 rounded-full bg-[#036e26] text-white flex items-center justify-center text-xs font-bold">1</div>
+              <span className="text-[10px] text-[#036e26] font-bold mt-1">Cart</span>
             </div>
             <div className="h-px bg-gray-300 flex-1 mx-2"></div>
             <div className="flex flex-col items-center opacity-50">
@@ -103,13 +103,13 @@ export function CartPage() {
                         {item.variant?.size || 'Standard'}
                       </p>
                       {item.product.color && (
-                        <p className="text-[10px] text-[#C16E4F] font-medium bg-[#C16E4F]/10 px-1.5 py-0.5 rounded inline-block">
+                        <p className="text-[10px] text-[#036e26] font-medium bg-[#036e26]/10 px-1.5 py-0.5 rounded inline-block">
                           {item.product.color}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="font-bold text-[#C16E4F] mb-2">₹{item.variant?.price || item.product.price}</div>
+                  <div className="font-bold text-[#036e26] mb-2">₹{item.variant?.price || item.product.price}</div>
                   
                   <div className="flex items-center w-24 border border-gray-200 rounded-lg p-0.5">
                     <button 

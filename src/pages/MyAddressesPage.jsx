@@ -77,7 +77,7 @@ export function MyAddressesPage() {
       <Header title="My Addresses" />
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-serif font-bold text-[#5C4033]">Saved Addresses</h2>
+          <h2 className="text-2xl font-serif font-bold text-[#036e26]">Saved Addresses</h2>
           <button onClick={() => setShowForm(true)}
             className="flex items-center gap-2 text-sm font-bold text-white bg-brand-orange px-4 py-2.5 rounded-xl hover:bg-orange-600 transition-colors shadow-sm">
             <Plus className="w-4 h-4" /> Add New Address

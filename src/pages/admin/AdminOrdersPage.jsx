@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
 const FROM_ADDRESS = {
-  name: "Moksha Mandir",
+  name: "Indbasket",
   line1: "1-1-738, Vinayaka temple road",
   city: "Koratla",
   state: "Telangana",
@@ -173,9 +173,9 @@ export function AdminOrdersPage() {
                   <tr>
                       <td>
                           <div style="font-size: 9pt; color: #555555; margin-top: 8px; line-height: 1.5;">
-                              <strong style="font-size: 20px;">Moksha Mandir</strong><br>
-                              GSTIN: 36BANPK1643M1ZC<br>
-                              Phone: +91 90326 75205 | Email: mokshamandir542@gmail.com<br>
+                              <strong style="font-size: 20px;"><span style="color: #fe6603;">Ind</span><span style="color: #036e26;">basket</span></strong><br>
+                              1-1-738, Vinayaka temple road<br>
+                              Phone: +91 90326 75205 | Email: indbasket@gmail.com<br>
                           </div>
                       </td>
                       <td class="invoice-title-block">
@@ -195,7 +195,7 @@ export function AdminOrdersPage() {
                   <td class="from-box">
                       <div class="section-heading">From Address</div>
                       <div class="address-box">
-                          <strong>Moksha Mandir</strong><br>
+                          <strong><span style="color: #fe6603;">Ind</span><span style="color: #036e26;">basket</span></strong><br>
                           1-1-738, Vinayaka temple road,<br>
                           Koratla, Telangana, India<br>
                           <strong>Phone:</strong> +91 90326 75205
@@ -274,7 +274,7 @@ export function AdminOrdersPage() {
       `Hi ${order.user_name || address.name || 'Customer'}! 🙏 Please find your *Invoice* for Order *#${order.order_number || order.id}* below:\n\n` +
       `*Items:*\n${itemsText}\n\n` +
       `*Total: ₹${order.total}*\n\n` +
-      `Thank you for shopping with Moksha Mandir!`
+      `Thank you for shopping with Indbasket!`
     );
     window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
   };
@@ -320,7 +320,7 @@ export function AdminOrdersPage() {
 <body>
 <div class="box">
   <div class="hdr">
-    <div class="brand">Moksha Mandir</div>
+    <div class="brand"><span style="color: #fe6603;">Ind</span><span style="color: #036e26;">basket</span></div>
     <div class="oid">#${order.order_number || order.id}</div>
   </div>
   <div class="sec">
@@ -356,7 +356,7 @@ export function AdminOrdersPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-4 border-[#C16E4F]/20 border-t-[#C16E4F] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-[#036e26]/20 border-t-[#036e26] rounded-full animate-spin" />
     </div>
   );
 
@@ -367,8 +367,8 @@ export function AdminOrdersPage() {
       {/* Page Header */}
       <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-[#5C4033]">Orders</h1>
-          <p className="text-[#5C4033]/40 text-xs font-sans mt-0.5">{orders.length} total</p>
+          <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-[#036e26]">Orders</h1>
+          <p className="text-[#036e26]/40 text-xs font-sans mt-0.5">{orders.length} total</p>
         </div>
       </div>
 
@@ -378,8 +378,8 @@ export function AdminOrdersPage() {
           <button key={s} onClick={() => setStatusFilter(s)}
             className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold font-sans capitalize transition-colors ${
               statusFilter === s
-                ? "bg-[#C16E4F] text-white shadow-sm"
-                : "bg-white border border-[#C16E4F]/20 text-[#5C4033]/60 hover:border-[#C16E4F]/40"
+                ? "bg-[#036e26] text-white shadow-sm"
+                : "bg-white border border-[#036e26]/20 text-[#036e26]/60 hover:border-[#036e26]/40"
             }`}>
             {s === "all" ? `All (${orders.length})` : `${s} (${orders.filter(o => o.status === s).length})`}
           </button>
@@ -387,8 +387,8 @@ export function AdminOrdersPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-[#C16E4F]/10 p-10 sm:p-12 text-center">
-          <p className="text-[#5C4033]/50 font-sans text-sm">
+        <div className="bg-white rounded-2xl border border-[#036e26]/10 p-10 sm:p-12 text-center">
+          <p className="text-[#036e26]/50 font-sans text-sm">
             {orders.length === 0 ? "No orders yet." : `No ${statusFilter} orders.`}
           </p>
         </div>
@@ -396,14 +396,14 @@ export function AdminOrdersPage() {
         <div className="space-y-3 sm:space-y-4">
           {filtered.map((order, i) => (
             <motion.div key={order.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-              className="bg-white rounded-2xl border border-[#C16E4F]/10 overflow-hidden">
+              className="bg-white rounded-2xl border border-[#036e26]/10 overflow-hidden">
 
               <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 lg:p-5 cursor-pointer hover:bg-[#FDFBF7]/30 transition-colors"
                 onClick={() => setExpanded(expanded === order.id ? null : order.id)}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                    <span className="font-serif font-bold text-[#5C4033] text-sm sm:text-base">#{order.order_number || order.id}</span>
-                    <span className="text-[#5C4033]/50 text-[10px] sm:text-xs font-sans">
+                    <span className="font-serif font-bold text-[#036e26] text-sm sm:text-base">#{order.order_number || order.id}</span>
+                    <span className="text-[#036e26]/50 text-[10px] sm:text-xs font-sans">
                       {new Date(order.created_at).toLocaleDateString("en-IN")}
                     </span>
                     <span className={`text-[9px] sm:text-[10px] font-bold font-sans px-2 py-0.5 rounded-full ${STATUS_COLORS[order.status] || "bg-[#FDFBF7] text-gray-500"}`}>
@@ -415,45 +415,45 @@ export function AdminOrdersPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-[#5C4033]/60 text-[10px] sm:text-xs font-sans mt-0.5 truncate">
+                  <p className="text-[#036e26]/60 text-[10px] sm:text-xs font-sans mt-0.5 truncate">
                     {order.user_name || "Guest"}
                   </p>
                 </div>
                 <span className="font-serif font-bold text-[#D4AF37] text-sm sm:text-base lg:text-lg flex-shrink-0">₹{order.total}</span>
-                <ChevronDown className={`w-4 h-4 text-[#5C4033]/40 transition-transform flex-shrink-0 ${expanded === order.id ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-4 h-4 text-[#036e26]/40 transition-transform flex-shrink-0 ${expanded === order.id ? "rotate-180" : ""}`} />
               </div>
 
               {expanded === order.id && (
-                <div className="border-t border-[#C16E4F]/5 p-3 sm:p-4 lg:p-5 space-y-4">
+                <div className="border-t border-[#036e26]/5 p-3 sm:p-4 lg:p-5 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[10px] font-sans text-[#5C4033]/40 uppercase tracking-wider mb-2">Update Status</p>
+                      <p className="text-[10px] font-sans text-[#036e26]/40 uppercase tracking-wider mb-2">Update Status</p>
                       <select value={order.status} onChange={(e) => updateStatus(order.id, e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-[#FDFBF7] border border-[#C16E4F]/10 text-[#5C4033] font-sans text-sm focus:outline-none">
+                        className="w-full px-3 py-2 rounded-xl bg-[#FDFBF7] border border-[#036e26]/10 text-[#036e26] font-sans text-sm focus:outline-none">
                         {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                     <div>
-                      <p className="text-[10px] font-sans text-[#5C4033]/40 uppercase tracking-wider mb-2">Shipment</p>
+                      <p className="text-[10px] font-sans text-[#036e26]/40 uppercase tracking-wider mb-2">Shipment</p>
                       {order.tracking_id && order.tracking_id.trim() !== "" ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-2">
                             <span className="text-green-700 font-bold font-sans text-xs truncate">AWB: {order.tracking_id}</span>
                             {order.tracking_link && (
                               <a href={order.tracking_link} target="_blank" rel="noopener noreferrer"
-                                className="ml-auto flex-shrink-0 text-[#C16E4F] hover:opacity-80 transition-colors">
+                                className="ml-auto flex-shrink-0 text-[#036e26] hover:opacity-80 transition-colors">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </a>
                             )}
                           </div>
                           <button onClick={() => createShipment(order.id)} disabled={shipping[order.id]}
-                            className="text-xs font-sans text-[#5C4033]/50 hover:text-[#C16E4F] transition-colors underline">
+                            className="text-xs font-sans text-[#036e26]/50 hover:text-[#036e26] transition-colors underline">
                             Re-create shipment
                           </button>
                         </div>
                       ) : (
                         <button onClick={() => createShipment(order.id)} disabled={shipping[order.id]}
-                          className="w-full flex items-center justify-center gap-2 bg-[#C16E4F]/10 hover:bg-[#C16E4F]/20 text-[#C16E4F] px-4 py-2.5 rounded-xl text-sm font-semibold font-sans transition-colors disabled:opacity-50">
+                          className="w-full flex items-center justify-center gap-2 bg-[#036e26]/10 hover:bg-[#036e26]/20 text-[#036e26] px-4 py-2.5 rounded-xl text-sm font-semibold font-sans transition-colors disabled:opacity-50">
                           {shipping[order.id] ? "Creating..." : "🚚 Create Shipment"}
                         </button>
                       )}
@@ -461,9 +461,9 @@ export function AdminOrdersPage() {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#C16E4F]/5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#036e26]/5">
                     <button onClick={() => printLabel(order)}
-                      className="flex items-center justify-center gap-1.5 bg-[#5C4033] text-white px-3 py-2.5 rounded-xl text-xs font-semibold font-sans hover:bg-[#5C4033]/80 transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-[#036e26] text-white px-3 py-2.5 rounded-xl text-xs font-semibold font-sans hover:bg-[#036e26]/80 transition-colors">
                       <Printer className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Print Label</span>
                     </button>
@@ -473,7 +473,7 @@ export function AdminOrdersPage() {
                       <span className="truncate">Notify WA</span>
                     </button>
                     <button onClick={() => openInvoice(order)}
-                      className="flex items-center justify-center gap-1.5 bg-[#D4AF37] hover:bg-amber-500 text-[#5C4033] px-3 py-2.5 rounded-xl text-xs font-semibold font-sans transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-[#D4AF37] hover:bg-amber-500 text-[#036e26] px-3 py-2.5 rounded-xl text-xs font-semibold font-sans transition-colors">
                       <FileText className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Invoice</span>
                     </button>

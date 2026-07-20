@@ -1,103 +1,127 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Header } from '../components/Header';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Package, RefreshCcw, CreditCard, HelpCircle, MessageSquare } from 'lucide-react';
 
 export function ContactPage() {
+  const helpTopics = [
+    { icon: Package, title: 'I want help with my orders', desc: 'Track, cancel or return orders' },
+    { icon: RefreshCcw, title: 'I want help with returns & refunds', desc: 'Manage your return requests' },
+    { icon: CreditCard, title: 'I want help with payment', desc: 'Payment issues, refunds' },
+    { icon: HelpCircle, title: 'I want help with other issues', desc: 'Offers, account, etc.' }
+  ];
+
   return (
-    <div className="bg-gray-50 min-h-screen pb-20 md:pb-0">
-      <Header title="Contact Us" />
+    <div className="bg-[#f1f3f6] min-h-screen pb-24 md:pb-16 font-sans">
+      <Header title="Help Center" />
       
+      {/* Top Banner */}
+      <div className="bg-[#036e26] text-white py-10 md:py-14 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Indbasket Help Center</h1>
+          <p className="text-sm md:text-base text-green-100">We are here to help you 24x7. How can we assist you today?</p>
+        </div>
+      </div>
+
       <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+        <div className="flex flex-col lg:flex-row gap-6">
           
-          {/* Contact Info */}
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 md:p-12 relative overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full pointer-events-none opacity-50"></div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-brand-maroon mb-6 relative z-10">Get in Touch</h2>
-            <p className="text-gray-600 mb-8 text-base leading-relaxed relative z-10">
-              We would love to hear from you. Whether you have a question about our products, need assistance with an order, or just want to share your feedback, our team is ready to help.
-            </p>
+          {/* Left Column - Help Topics */}
+          <div className="w-full lg:w-1/3 flex flex-col gap-4">
+            <div className="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+              <div className="p-4 border-b border-gray-100 bg-gray-50">
+                <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide">Help Topics</h2>
+              </div>
+              <div className="flex flex-col">
+                {helpTopics.map((topic, index) => (
+                  <button key={index} className="flex items-start gap-4 p-4 border-b border-gray-50 hover:bg-orange-50 transition-colors text-left group">
+                    <topic.icon className="w-5 h-5 text-[#fe6603] mt-0.5" />
+                    <div>
+                      <h3 className="text-sm font-bold text-gray-800 group-hover:text-[#fe6603] transition-colors">{topic.title}</h3>
+                      <p className="text-xs text-gray-500 mt-1">{topic.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
             
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5 text-brand-orange" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Our Location</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">
-                    1-1-738, Vinayaka temple road,<br/>
-                    Koratla, Telangana, India
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1">GSTIN: 36BANPK1643M1ZC</p>
-                </div>
-              </div>
+            {/* Contact Info Card */}
+            <div className="bg-white rounded-sm shadow-sm border border-gray-100 p-6">
+              <h2 className="text-sm font-bold text-gray-800 uppercase tracking-wide mb-4">Direct Contact</h2>
               
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
-                  <Phone className="w-5 h-5 text-brand-orange" />
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-[#fe6603] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-800 mb-0.5">Corporate Office</p>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      1-1-738, Vinayaka temple road,<br/>
+                      Koratla, Telangana, India
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Phone & WhatsApp</h3>
-                  <p className="text-sm text-gray-600">+91 90326 75205 </p>
-                  <p className="text-xs text-gray-500 mt-1">Mon-Sat, 9:00 AM - 6:00 PM</p>
+                
+                <div className="flex items-start gap-3">
+                  <Phone className="w-4 h-4 text-[#fe6603] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-800 mb-0.5">Customer Support</p>
+                    <p className="text-xs text-gray-600">+91 90326 75205</p>
+                    <p className="text-[10px] text-gray-500">Mon-Sat, 9:00 AM - 6:00 PM</p>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
-                  <Mail className="w-5 h-5 text-brand-orange" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-1">Email Address</h3>
-                  <p className="text-sm text-gray-600">mokshamandir542@gmail.com</p>
+                
+                <div className="flex items-start gap-3">
+                  <Mail className="w-4 h-4 text-[#fe6603] mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-semibold text-gray-800 mb-0.5">Email</p>
+                    <p className="text-xs text-gray-600">indbasket@gmail.com</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Contact Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-white rounded-3xl shadow-lg border border-gray-100 p-8 md:p-12 relative"
-          >
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-orange to-brand-maroon rounded-t-3xl"></div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">Send us a Message</h2>
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Full Name</label>
-                <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/50 transition-shadow" placeholder="Your Name" />
+          {/* Right Column - Contact Form */}
+          <div className="w-full lg:w-2/3 flex flex-col">
+            <div className="bg-white rounded-sm shadow-sm border border-gray-100 p-6 md:p-8 flex-1 flex flex-col">
+              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                <MessageSquare className="w-6 h-6 text-[#036e26]" />
+                <h2 className="text-lg md:text-xl font-bold text-gray-800">Still need help? Write to us.</h2>
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Email Address</label>
-                <input type="email" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/50 transition-shadow" placeholder="your@email.com" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Subject</label>
-                <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/50 transition-shadow" placeholder="How can we help?" />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Message</label>
-                <textarea rows="4" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/50 transition-shadow resize-none" placeholder="Write your message here..."></textarea>
-              </div>
-              <motion.button 
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-[#C16E4F] to-brand-maroon text-white font-bold py-4 px-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-brand-orange/20 transition-all mt-2"
-              >
-                Send Message
-                <Send className="w-5 h-5" />
-              </motion.button>
-            </form>
-          </motion.div>
+              
+              <form className="space-y-6 flex-1 flex flex-col" onSubmit={(e) => e.preventDefault()}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase">Full Name</label>
+                    <input type="text" className="w-full px-4 py-3 rounded border border-gray-200 text-sm focus:outline-none focus:border-[#fe6603] transition-colors bg-gray-50 focus:bg-white" placeholder="John Doe" />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase">Email Address</label>
+                    <input type="email" className="w-full px-4 py-3 rounded border border-gray-200 text-sm focus:outline-none focus:border-[#fe6603] transition-colors bg-gray-50 focus:bg-white" placeholder="john@example.com" />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase">Subject / Order ID</label>
+                  <input type="text" className="w-full px-4 py-3 rounded border border-gray-200 text-sm focus:outline-none focus:border-[#fe6603] transition-colors bg-gray-50 focus:bg-white" placeholder="What is this regarding?" />
+                </div>
+                
+                <div className="flex-1 flex flex-col">
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5 uppercase">Description</label>
+                  <textarea className="w-full flex-1 min-h-[150px] px-4 py-3 rounded border border-gray-200 text-sm focus:outline-none focus:border-[#fe6603] transition-colors bg-gray-50 focus:bg-white resize-none" placeholder="Please describe your issue in detail..."></textarea>
+                </div>
+                
+                <motion.button 
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-[#fe6603] text-white font-bold py-3.5 px-8 rounded shadow-sm hover:shadow-md hover:bg-orange-600 transition-all flex items-center justify-center gap-2 mt-auto w-full md:w-auto md:self-end"
+                >
+                  <Send className="w-4 h-4" />
+                  Submit Request
+                </motion.button>
+              </form>
+            </div>
+          </div>
           
         </div>
       </div>

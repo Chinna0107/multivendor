@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import logoImg from '../assets/logo.jpeg';
 
 export function SplashScreen({ onComplete }) {
   const container = useRef(null);
@@ -54,8 +55,8 @@ export function SplashScreen({ onComplete }) {
       <div className="flex flex-col items-center justify-center gap-6">
         <img 
           ref={logo}
-          src="/image.png" 
-          alt="Moksha Mandir" 
+          src={logoImg} 
+          alt="Indbasket" 
           className="w-48 md:w-72 object-contain mix-blend-multiply drop-shadow-xl"
         />
         <div ref={textRef} className="text-center overflow-hidden">

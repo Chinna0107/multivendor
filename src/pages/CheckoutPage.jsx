@@ -167,7 +167,7 @@ export function CheckoutPage() {
           name: address.name,
           contact: address.mobile
         },
-        theme: { color: '#C16E4F' },
+        theme: { color: '#036e26' },
         modal: {
           ondismiss: function () {
             setIsPlacingOrder(false);
@@ -186,29 +186,29 @@ export function CheckoutPage() {
   const renderStepIndicator = () => (
     <div className="flex justify-between items-center mb-6 px-2 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
       <div className="flex flex-col items-center cursor-pointer" onClick={() => navigate('/cart')}>
-        <div className="w-6 h-6 rounded-full bg-[#C16E4F] text-white flex items-center justify-center text-xs font-bold">✓</div>
-        <span className="text-[10px] text-[#C16E4F] font-bold mt-1">Cart</span>
+        <div className="w-6 h-6 rounded-full bg-[#036e26] text-white flex items-center justify-center text-xs font-bold">✓</div>
+        <span className="text-[10px] text-[#036e26] font-bold mt-1">Cart</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#C16E4F]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
       
       <div className="flex flex-col items-center">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#C16E4F] text-white' : 'bg-gray-300 text-white'}`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>
           {step > 2 ? '✓' : (token ? '✓' : '1')}
         </div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#C16E4F]' : 'text-gray-500'}`}>{token ? 'Auth' : 'Login'}</span>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#036e26]' : 'text-gray-500'}`}>{token ? 'Auth' : 'Login'}</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#C16E4F]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
 
       <div className="flex flex-col items-center">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#C16E4F] text-white' : 'bg-gray-300 text-white'}`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>
           {step > 2 ? '✓' : '2'}
         </div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#C16E4F]' : 'text-gray-500'}`}>Address</span>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#036e26]' : 'text-gray-500'}`}>Address</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 3 ? 'bg-[#C16E4F]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 3 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
       <div className={`flex flex-col items-center ${step < 3 ? 'opacity-50' : ''}`}>
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 3 ? 'bg-[#C16E4F] text-white' : 'bg-gray-300 text-white'}`}>3</div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 3 ? 'text-[#C16E4F]' : 'text-gray-500'}`}>Payment</span>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 3 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>3</div>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 3 ? 'text-[#036e26]' : 'text-gray-500'}`}>Payment</span>
       </div>
     </div>
   );
@@ -528,10 +528,10 @@ export function CheckoutPage() {
       {isPlacingOrder && (
         <div ref={overlayRef} className="fixed inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center w-full h-full">
           <div className="flex flex-col items-center gap-4">
-            <div ref={iconRef} className="w-24 h-24 bg-[#C16E4F] rounded-full flex items-center justify-center shadow-lg">
+            <div ref={iconRef} className="w-24 h-24 bg-[#036e26] rounded-full flex items-center justify-center shadow-lg">
               <CheckCircle className="w-12 h-12 text-white" strokeWidth={2.5} />
             </div>
-            <h2 ref={textRef} className="text-2xl font-serif font-bold text-[#5C4033]">Order Confirmed!</h2>
+            <h2 ref={textRef} className="text-2xl font-serif font-bold text-[#036e26]">Order Confirmed!</h2>
             <p className="text-sm text-gray-500">Redirecting to tracking...</p>
           </div>
         </div>

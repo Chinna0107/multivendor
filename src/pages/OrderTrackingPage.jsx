@@ -12,7 +12,7 @@ export function OrderTrackingPage() {
   useEffect(() => {
     // Fire a beautiful confetti burst on mount
     const end = Date.now() + 1.5 * 1000;
-    const colors = ['#C16E4F', '#7D2A2A', '#ffffff'];
+    const colors = ['#036e26', '#7D2A2A', '#ffffff'];
 
     (function frame() {
       confetti({
@@ -59,7 +59,7 @@ export function OrderTrackingPage() {
           className="text-center space-y-3 mb-10"
         >
           <h1 className="text-3xl md:text-4xl font-serif font-bold text-gray-900">Order Placed Successfully!</h1>
-          <p className="text-gray-500 text-sm md:text-base">Thank you for shopping with Moksha Mandir. Your divine essentials are being prepared.</p>
+          <p className="text-gray-500 text-sm md:text-base">Thank you for shopping with Indbasket. Your items are being prepared.</p>
         </motion.div>
 
         <motion.div 
@@ -74,7 +74,7 @@ export function OrderTrackingPage() {
             <div className="flex items-center justify-between border-b border-gray-100 pb-5">
               <div>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Order Number</p>
-                <p className="text-lg font-bold text-[#C16E4F]">#{orderId}</p>
+                <p className="text-lg font-bold text-[#036e26]">#{orderId}</p>
               </div>
               <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
                 <Package className="w-6 h-6 text-brand-orange" />

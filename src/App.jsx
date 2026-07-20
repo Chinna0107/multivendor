@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AppLayout } from './components/AppLayout';
 import { SplashScreen } from './components/SplashScreen';
 import { useStoreData } from './store/useStoreData';
+
 import { HomePage } from './pages/HomePage';
 import { CategoryListingPage } from './pages/CategoryListingPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
@@ -19,6 +21,11 @@ import { ContactPage } from './pages/ContactPage';
 import { MyOrdersPage } from './pages/MyOrdersPage';
 import { MyAddressesPage } from './pages/MyAddressesPage';
 import { AccountSettingsPage } from './pages/AccountSettingsPage';
+import { ShippingPolicyPage } from './pages/ShippingPolicyPage';
+import { ReturnsPolicyPage } from './pages/ReturnsPolicyPage';
+import { FAQPage } from './pages/FAQPage';
+import { CollectionPage } from './pages/CollectionPage';
+
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import { AdminProductsPage } from './pages/admin/AdminProductsPage';
@@ -28,6 +35,47 @@ import { AdminBannersPage } from './pages/admin/AdminBannersPage';
 import { AdminCouponsPage } from './pages/admin/AdminCouponsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage';
+
+function PageTransition({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -15 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function AnimatedAppRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageTransition><HomePage /></PageTransition>} />
+        <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+        <Route path="/contact" element={<PageTransition><ContactPage /></PageTransition>} />
+        <Route path="/shipping-policy" element={<PageTransition><ShippingPolicyPage /></PageTransition>} />
+        <Route path="/returns-policy" element={<PageTransition><ReturnsPolicyPage /></PageTransition>} />
+        <Route path="/faqs" element={<PageTransition><FAQPage /></PageTransition>} />
+        <Route path="/collection/:type" element={<PageTransition><CollectionPage /></PageTransition>} />
+        <Route path="/category/:categoryId" element={<PageTransition><CategoryListingPage /></PageTransition>} />
+        <Route path="/product/:id" element={<PageTransition><ProductDetailPage /></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><CartPage /></PageTransition>} />
+        <Route path="/checkout" element={<PageTransition><CheckoutPage /></PageTransition>} />
+        <Route path="/order-tracking/:orderId" element={<PageTransition><OrderTrackingPage /></PageTransition>} />
+        <Route path="/wishlist" element={<PageTransition><WishlistPage /></PageTransition>} />
+        <Route path="/profile" element={<PageTransition><ProfilePage /></PageTransition>} />
+        <Route path="/dashboard" element={<PageTransition><DashboardPage /></PageTransition>} />
+        <Route path="/my-orders" element={<PageTransition><MyOrdersPage /></PageTransition>} />
+        <Route path="/my-addresses" element={<PageTransition><MyAddressesPage /></PageTransition>} />
+        <Route path="/account-settings" element={<PageTransition><AccountSettingsPage /></PageTransition>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -63,25 +111,10 @@ function App() {
               </AdminLayout>
             } />
 
-            {/* App pages — with AppLayout */}
+            {/* App pages — with AppLayout and Page Transitions */}
             <Route path="/*" element={
               <AppLayout>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/contact" element={<ContactPage />} />
-                  <Route path="/category/:categoryId" element={<CategoryListingPage />} />
-                  <Route path="/product/:id" element={<ProductDetailPage />} />
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/order-tracking/:orderId" element={<OrderTrackingPage />} />
-                  <Route path="/wishlist" element={<WishlistPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                  <Route path="/my-orders" element={<MyOrdersPage />} />
-                  <Route path="/my-addresses" element={<MyAddressesPage />} />
-                  <Route path="/account-settings" element={<AccountSettingsPage />} />
-                </Routes>
+                <AnimatedAppRoutes />
               </AppLayout>
             } />
           </Routes>

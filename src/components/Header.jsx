@@ -5,9 +5,11 @@ import {
   User, LogIn, Package, MapPin, LayoutDashboard, LogOut,
   Settings, Shield, ChevronDown, X
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useWishlistStore } from '../store/useWishlistStore';
+import logo from '../assets/logo.jpeg';
 
 function AvatarDropdown({ user, onLogout }) {
   const [open, setOpen] = useState(false);
@@ -74,24 +76,26 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
   return (
     <>
       <div className="h-[76px] hidden md:block" />
-      <header className="fixed top-0 left-0 z-50 w-full bg-white px-4 py-3 shadow-sm border-b border-gray-100 hidden md:block">
-        <div className="w-full mx-auto flex items-center justify-between">
+      <header className="fixed top-0 left-0 z-50 w-full bg-white px-6 md:px-10 lg:px-12 py-3.5 shadow-sm border-b border-gray-100 hidden md:block">
+        <div className="w-full max-w-[1600px] mx-auto flex items-center justify-between gap-4">
           
-          <Link to="/" className="flex items-center gap-2">
-            <img src="/image.png" alt="Logo" className="h-10 object-contain mix-blend-multiply" />
-            <span className="font-bold text-xl text-brand-maroon hidden lg:block tracking-tight">Mokshamandir</span>
+          {/* Left: Logo */}
+          <Link to="/" className="flex-1 flex items-center gap-2 justify-start group">
+            <img src={logo} alt="Logo" className="h-10 md:h-11 object-contain mix-blend-multiply scale-125 md:scale-150 origin-left" />
           </Link>
 
-          {/* Desktop Nav & Search */}
-          <div className="flex-1 flex items-center justify-end md:justify-center px-4 lg:px-12 gap-8">
-            <nav className="hidden lg:flex items-center gap-6">
-              <Link to="/" className="text-sm font-semibold text-gray-700 hover:text-brand-orange transition-colors">Home</Link>
-              <Link to="/category/all" className="text-sm font-semibold text-gray-700 hover:text-brand-orange transition-colors">Categories</Link>
-              <Link to="/about" className="text-sm font-semibold text-gray-700 hover:text-brand-orange transition-colors">About</Link>
-              <Link to="/contact" className="text-sm font-semibold text-gray-700 hover:text-brand-orange transition-colors">Contact</Link>
-              <Link to="/my-orders" className="text-sm font-semibold text-gray-700 hover:text-brand-orange transition-colors">Orders</Link>
-            </nav>
-            <div className="relative w-[280px] xl:w-[320px]">
+          {/* Center: Navigation */}
+          <nav className="hidden lg:flex shrink-0 items-center justify-center gap-6">
+            <Link to="/" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Home</Link>
+            <Link to="/category/all" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Categories</Link>
+            <Link to="/about" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">About</Link>
+            <Link to="/contact" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Contact</Link>
+            <Link to="/my-orders" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Orders</Link>
+          </nav>
+
+          {/* Right: Search & Icons */}
+          <div className="flex-1 flex items-center justify-end gap-4 lg:gap-6">
+            <div className="relative hidden xl:block w-[220px]">
               <Search className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
@@ -101,35 +105,35 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
                     window.location.href = `/category/all?search=${encodeURIComponent(e.target.value.trim())}`;
                   }
                 }}
-                className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#fe6603]/30 focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
               />
             </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <Link to="/wishlist" className="relative p-1 cursor-pointer hover:-translate-y-0.5 transition-transform">
-              <Heart className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
-              {wishlistCount > 0 && (
-                <span className="absolute top-0 right-0 bg-[#C16E4F] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
-                  {wishlistCount}
-                </span>
-              )}
-            </Link>
-            <Link to="/cart" className="relative p-1 cursor-pointer hover:-translate-y-0.5 transition-transform">
-              <ShoppingCart className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
-              {cartCount > 0 && (
-                <span className="absolute top-0 right-0 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-            {token ? (
-              <AvatarDropdown user={user} onLogout={handleLogout} />
-            ) : (
-              <Link to="/login" className="flex items-center gap-1 text-xs font-bold text-white bg-brand-orange px-3 py-1.5 rounded-lg hover:bg-orange-600 transition-colors ml-2">
-                <LogIn className="w-3.5 h-3.5" /> Login
+            <div className="flex items-center gap-3 lg:gap-4">
+              <Link to="/wishlist" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-orange-50 rounded-full">
+                <Heart className="w-5 h-5 text-[#fe6603]" strokeWidth={1.5} />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#036e26] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm">
+                    {wishlistCount}
+                  </span>
+                )}
               </Link>
-            )}
+              <Link to="/cart" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-green-50 rounded-full">
+                <ShoppingCart className="w-5 h-5 text-[#036e26]" strokeWidth={1.5} />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#fe6603] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+              {token ? (
+                <AvatarDropdown user={user} onLogout={handleLogout} />
+              ) : (
+                <Link to="/login" className="flex items-center gap-1.5 text-sm font-bold text-white bg-gradient-to-r from-[#fe6603] to-[#ff7b24] px-4 lg:px-5 py-2 rounded-full hover:shadow-md transition-all ml-1 shadow-sm">
+                  <LogIn className="w-4 h-4" /> Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -150,39 +154,97 @@ export function Header({ variant = 'default', title, showShare = false }) {
 
   const handleLogout = () => { logout(); navigate('/'); };
 
-  const MobileSidebar = () => (
-    <>
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black/50 z-[100] md:hidden backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)} />
-      )}
-      <div className={`fixed top-0 left-0 w-[280px] h-full bg-white z-[101] shadow-2xl transition-transform duration-300 md:hidden flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-orange-50/50">
-          <div className="flex items-center gap-2">
-            <img src="/image.png" alt="Logo" className="h-8 object-contain mix-blend-multiply" />
-            <span className="font-bold text-lg text-brand-maroon">Mokshamandir</span>
-          </div>
-          <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 text-gray-500 hover:text-gray-800 bg-white rounded-full shadow-sm">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-        <nav className="flex flex-col p-4 gap-2 flex-grow overflow-y-auto">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">Home</Link>
-          <Link to="/category/all" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">Categories</Link>
-          <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">About Us</Link>
-          <Link to="/contact" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">Contact Us</Link>
-          <Link to="/my-orders" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">My Orders</Link>
-          <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors">My Profile</Link>
-        </nav>
-        {!token && (
-          <div className="p-4 border-t border-gray-100 bg-gray-50">
-            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full bg-brand-orange text-white font-bold py-3 rounded-xl shadow-sm">
-              <LogIn className="w-4 h-4" /> Login to Account
-            </Link>
-          </div>
+  const MobileSidebar = () => {
+    const navLinks = [
+      { name: "Home", path: "/" },
+      { name: "Categories", path: "/category/all" },
+      { name: "About Us", path: "/about" },
+      { name: "Contact Us", path: "/contact" },
+      { name: "My Orders", path: "/my-orders" },
+      { name: "My Profile", path: "/profile" },
+    ];
+
+    const containerVariants = {
+      hidden: { opacity: 0 },
+      visible: {
+        opacity: 1,
+        transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+      }
+    };
+
+    const itemVariants = {
+      hidden: { opacity: 0, x: -20 },
+      visible: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+    };
+
+    return (
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div 
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-black/50 z-[100] md:hidden backdrop-blur-sm" 
+            onClick={() => setMobileMenuOpen(false)} 
+          />
         )}
-      </div>
-    </>
-  );
+        {mobileMenuOpen && (
+          <motion.div 
+            key="sidebar"
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+            className="fixed top-0 left-0 w-[280px] h-full bg-white z-[101] shadow-2xl md:hidden flex flex-col"
+          >
+            <div className="p-4 flex items-center justify-between border-b border-gray-100 bg-orange-50/50">
+              <div className="flex items-center gap-2">
+                <img src={logo} alt="Logo" className="h-8 object-contain mix-blend-multiply" />
+                <span className="font-bold text-lg text-brand-maroon"><span className="text-[#fe6603]">Ind</span><span className="text-[#036e26]">basket</span></span>
+              </div>
+              <button onClick={() => setMobileMenuOpen(false)} className="p-1.5 text-gray-500 hover:text-gray-800 bg-white rounded-full shadow-sm">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <motion.nav 
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col p-4 gap-2 flex-grow overflow-y-auto"
+            >
+              {navLinks.map((link) => (
+                <motion.div key={link.name} variants={itemVariants}>
+                  <Link 
+                    to={link.path} 
+                    onClick={() => setMobileMenuOpen(false)} 
+                    className="block text-gray-700 font-semibold text-base py-3 px-4 rounded-lg hover:bg-orange-50 hover:text-brand-orange transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </motion.div>
+              ))}
+            </motion.nav>
+            
+            {!token && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="p-4 border-t border-gray-100 bg-gray-50"
+              >
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="flex items-center justify-center gap-2 w-full bg-brand-orange text-white font-bold py-3 rounded-xl shadow-sm">
+                  <LogIn className="w-4 h-4" /> Login to Account
+                </Link>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    );
+  };
 
   return (
     <>
@@ -202,22 +264,22 @@ export function Header({ variant = 'default', title, showShare = false }) {
                 </button>
 
                 <Link to="/" className="flex items-center gap-2">
-                  <img src="/image.png" alt="Moksha Mandir" className="h-8 object-contain mix-blend-multiply" />
-                  <span className="font-bold text-lg text-brand-maroon">Mokshamandir</span>
+                  <img src={logo} alt="Indbasket" className="h-8 object-contain mix-blend-multiply" />
+                  <span className="font-bold text-lg text-brand-maroon"><span className="text-[#fe6603]">Ind</span><span className="text-[#036e26]">basket</span></span>
                 </Link>
               </div>
 
               <div className="flex items-center gap-3">
                 <Link to="/wishlist" className="relative p-1 cursor-pointer">
-                  <Heart className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
+                  <Heart className="w-5 h-5 text-[#fe6603]" strokeWidth={1.5} />
                   {wishlistCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-[#C16E4F] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                    <span className="absolute top-0 right-0 bg-[#036e26] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
                       {wishlistCount}
                     </span>
                   )}
                 </Link>
                 <Link to="/cart" className="relative p-1 cursor-pointer">
-                  <ShoppingCart className="w-5 h-5 text-gray-700" strokeWidth={1.5} />
+                  <ShoppingCart className="w-5 h-5 text-[#036e26]" strokeWidth={1.5} />
                   {cartCount > 0 && (
                     <span className="absolute top-0 right-0 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
                       {cartCount}
