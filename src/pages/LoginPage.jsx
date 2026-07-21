@@ -24,7 +24,7 @@ export function LoginPage() {
   const displayError = localError || error;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-brand-green flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-gray-100 p-8 md:p-10">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
@@ -41,7 +41,7 @@ export function LoginPage() {
             <input
               name="email" type="email" value={form.email} onChange={handleChange} required
               placeholder="you@example.com"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange transition-all bg-gray-50 hover:bg-white focus:bg-white"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange transition-all bg-gray-50 hover:bg-white focus:bg-white"
             />
           </div>
           <div>
@@ -51,7 +51,7 @@ export function LoginPage() {
                 name="password" type={showPass ? 'text' : 'password'} value={form.password}
                 onChange={handleChange} required
                 placeholder="Your password"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange transition-all bg-gray-50 hover:bg-white focus:bg-white pr-12"
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange focus:border-brand-orange transition-all bg-gray-50 hover:bg-white focus:bg-white pr-12"
               />
               <button type="button" onClick={() => setShowPass(!showPass)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-orange transition-colors">

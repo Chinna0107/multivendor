@@ -32,7 +32,7 @@ export function CollectionPage() {
   }
 
   return (
-    <div className="bg-[#f1f3f6] min-h-screen pb-24 md:pb-12">
+    <div className="bg-brand-green min-h-screen pb-24 md:pb-12">
       <Header variant="back" title={title} />
       
       {/* Desktop Title Banner */}

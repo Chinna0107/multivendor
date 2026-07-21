@@ -74,7 +74,7 @@ export function OrderTrackingPage() {
             <div className="flex items-center justify-between border-b border-gray-100 pb-5">
               <div>
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Order Number</p>
-                <p className="text-lg font-bold text-[#036e26]">#{orderId}</p>
+                <p className="text-lg font-bold text-brand-orange">#{orderId}</p>
               </div>
               <div className="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
                 <Package className="w-6 h-6 text-brand-orange" />

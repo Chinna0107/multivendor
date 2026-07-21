@@ -76,7 +76,7 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
   return (
     <>
       <div className="h-[76px] hidden md:block" />
-      <header className="fixed top-0 left-0 z-50 w-full bg-white px-6 md:px-10 lg:px-12 py-3.5 shadow-sm border-b border-gray-100 hidden md:block">
+      <header className="fixed top-0 left-0 z-50 w-full bg-brand-green px-6 md:px-10 lg:px-12 py-3.5 shadow-md hidden md:block">
         <div className="w-full max-w-[1600px] mx-auto flex items-center justify-between gap-4">
           
           {/* Left: Logo */}
@@ -86,11 +86,11 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
 
           {/* Center: Navigation */}
           <nav className="hidden lg:flex shrink-0 items-center justify-center gap-6">
-            <Link to="/" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Home</Link>
-            <Link to="/category/all" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Categories</Link>
-            <Link to="/about" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">About</Link>
-            <Link to="/contact" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Contact</Link>
-            <Link to="/my-orders" className="text-[14px] lg:text-[15px] font-bold text-gray-700 hover:text-[#fe6603] transition-colors">Orders</Link>
+            <Link to="/" className="text-[14px] lg:text-[15px] font-bold text-white hover:text-brand-orange transition-colors">Home</Link>
+            <Link to="/category/all" className="text-[14px] lg:text-[15px] font-bold text-white hover:text-brand-orange transition-colors">Categories</Link>
+            <Link to="/about" className="text-[14px] lg:text-[15px] font-bold text-white hover:text-brand-orange transition-colors">About</Link>
+            <Link to="/contact" className="text-[14px] lg:text-[15px] font-bold text-white hover:text-brand-orange transition-colors">Contact</Link>
+            <Link to="/my-orders" className="text-[14px] lg:text-[15px] font-bold text-white hover:text-brand-orange transition-colors">Orders</Link>
           </nav>
 
           {/* Right: Search & Icons */}
@@ -105,23 +105,23 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
                     window.location.href = `/category/all?search=${encodeURIComponent(e.target.value.trim())}`;
                   }
                 }}
-                className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-11 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#fe6603]/30 focus:bg-white transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                className="w-full bg-white rounded-full py-2 pl-11 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#fe6603]/30 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
               />
             </div>
 
             <div className="flex items-center gap-3 lg:gap-4">
-              <Link to="/wishlist" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-orange-50 rounded-full">
-                <Heart className="w-5 h-5 text-[#fe6603]" strokeWidth={1.5} />
+              <Link to="/wishlist" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-white/10 rounded-full">
+                <Heart className="w-5 h-5 text-white" strokeWidth={1.5} />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#036e26] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-brand-green shadow-sm">
                     {wishlistCount}
                   </span>
                 )}
               </Link>
-              <Link to="/cart" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-green-50 rounded-full">
-                <ShoppingCart className="w-5 h-5 text-[#036e26]" strokeWidth={1.5} />
+              <Link to="/cart" className="relative p-1.5 cursor-pointer hover:-translate-y-0.5 transition-transform bg-white/10 rounded-full">
+                <ShoppingCart className="w-5 h-5 text-white" strokeWidth={1.5} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#fe6603] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white shadow-sm">
+                  <span className="absolute -top-1 -right-1 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-brand-green shadow-sm">
                     {cartCount}
                   </span>
                 )}
@@ -129,7 +129,7 @@ function DesktopFullHeader({ cartCount, wishlistCount, token, user, handleLogout
               {token ? (
                 <AvatarDropdown user={user} onLogout={handleLogout} />
               ) : (
-                <Link to="/login" className="flex items-center gap-1.5 text-sm font-bold text-white bg-gradient-to-r from-[#fe6603] to-[#ff7b24] px-4 lg:px-5 py-2 rounded-full hover:shadow-md transition-all ml-1 shadow-sm">
+                <Link to="/login" className="flex items-center gap-1.5 text-sm font-bold text-white bg-gradient-to-r from-brand-orange to-[#ff7b24] px-4 lg:px-5 py-2 rounded-full hover:shadow-md transition-all ml-1 shadow-sm">
                   <LogIn className="w-4 h-4" /> Login
                 </Link>
               )}
@@ -255,33 +255,33 @@ export function Header({ variant = 'default', title, showShare = false }) {
       <div className="md:hidden">
         <MobileSidebar />
         <div className="h-[110px]" />
-        <header className="fixed top-0 left-0 z-50 w-full bg-white px-4 py-3 shadow-sm border-b border-gray-100">
+        <header className="fixed top-0 left-0 z-50 w-full bg-brand-green px-4 py-3 shadow-md">
           <div className="w-full">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <button onClick={() => setMobileMenuOpen(true)} className="p-1 -ml-1">
-                  <Menu className="w-6 h-6 text-gray-700" strokeWidth={1.5} />
+                  <Menu className="w-6 h-6 text-white" strokeWidth={1.5} />
                 </button>
 
                 <Link to="/" className="flex items-center gap-2">
-                  <img src={logo} alt="Indbasket" className="h-8 object-contain mix-blend-multiply" />
-                  <span className="font-bold text-lg text-brand-maroon"><span className="text-[#fe6603]">Ind</span><span className="text-[#036e26]">basket</span></span>
+                  {/* Using text for logo since bg is dark */}
+                  <span className="font-bold text-2xl text-white"><span className="text-white">Ind</span><span className="text-brand-orange">Basket</span></span>
                 </Link>
               </div>
 
               <div className="flex items-center gap-3">
                 <Link to="/wishlist" className="relative p-1 cursor-pointer">
-                  <Heart className="w-5 h-5 text-[#fe6603]" strokeWidth={1.5} />
+                  <Heart className="w-6 h-6 text-white" strokeWidth={1.5} />
                   {wishlistCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-[#036e26] text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                    <span className="absolute top-0 right-0 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-brand-green">
                       {wishlistCount}
                     </span>
                   )}
                 </Link>
                 <Link to="/cart" className="relative p-1 cursor-pointer">
-                  <ShoppingCart className="w-5 h-5 text-[#036e26]" strokeWidth={1.5} />
+                  <ShoppingCart className="w-6 h-6 text-white" strokeWidth={1.5} />
                   {cartCount > 0 && (
-                    <span className="absolute top-0 right-0 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-white">
+                    <span className="absolute top-0 right-0 bg-brand-orange text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-brand-green">
                       {cartCount}
                     </span>
                   )}
@@ -300,8 +300,14 @@ export function Header({ variant = 'default', title, showShare = false }) {
                     navigate(`/category/all?search=${encodeURIComponent(e.target.value.trim())}`);
                   }
                 }}
-                className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-brand-orange"
+                className="w-full bg-white rounded-xl py-3 pl-10 pr-12 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-orange shadow-inner"
               />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-brand-green/10 p-1.5 rounded-lg cursor-pointer">
+                {/* Adding a scan-like icon per design */}
+                <svg className="w-4 h-4 text-brand-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10v4M7 10v4M11 10v4M15 10v4M19 10v4M3 18h18M3 6h18" />
+                </svg>
+              </div>
             </div>
           </div>
         </header>

@@ -4,11 +4,11 @@ import { Truck, Clock, ShieldCheck, MapPin } from 'lucide-react';
 
 export function ShippingPolicyPage() {
   return (
-    <div className="bg-[#f1f3f6] min-h-screen pb-24 md:pb-16 font-sans">
+    <div className="bg-brand-green min-h-screen pb-24 md:pb-16 font-sans">
       <Header title="Shipping Policy" />
       
       {/* Top Banner */}
-      <div className="bg-[#036e26] text-white py-10 md:py-14 px-4">
+      <div className="bg-brand-green text-white py-10 md:py-14 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold mb-4">Shipping Policy</h1>
           <p className="text-sm md:text-base text-green-100 max-w-2xl mx-auto">
@@ -52,7 +52,7 @@ export function ShippingPolicyPage() {
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
               When your order has shipped, you will receive an email notification from us which will include a tracking number you can use to check its status. Please allow 24 hours for the tracking information to become available.
-              You can also track your order directly from your <a href="/my-orders" className="text-[#036e26] font-semibold hover:underline">My Orders</a> dashboard.
+              You can also track your order directly from your <a href="/my-orders" className="text-brand-orange font-semibold hover:underline">My Orders</a> dashboard.
             </p>
           </section>
 

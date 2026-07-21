@@ -4,6 +4,7 @@ import { ShieldCheck, Truck, CheckCircle, MapPin, CreditCard, ChevronLeft, UserC
 import { Header } from '../components/Header';
 import { useCartStore } from '../store/useCartStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { useToastStore } from '../store/useToastStore';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -14,15 +15,16 @@ export function CheckoutPage() {
   const location = useLocation();
   const { items, getTotal, clearCart } = useCartStore();
   const { token, user } = useAuthStore();
+  const { showToast } = useToastStore();
   
   const [step, setStep] = useState(token ? 2 : 1); // 1: Auth, 2: Address, 3: Payment
   const [address, setAddress] = useState({
-    name: user?.name || 'Guest User',
-    line1: '123 Main Street',
-    city: 'Hyderabad',
-    state: 'Telangana',
-    pincode: '500001',
-    mobile: user?.phone || '9876543210'
+    name: user?.name || '',
+    line1: '',
+    city: '',
+    state: '',
+    pincode: '',
+    mobile: user?.phone || ''
   });
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
@@ -33,6 +35,22 @@ export function CheckoutPage() {
 
   const grandTotal = getTotal();
   const couponCode = location.state?.couponCode || '';
+
+  const handleProceedToPayment = () => {
+    if (!address.name.trim() || !address.line1.trim() || !address.city.trim() || !address.state.trim() || !address.pincode.trim() || !address.mobile.trim()) {
+      showToast("Please fill in all required address fields.", "error");
+      return;
+    }
+    if (!/^\d{6}$/.test(address.pincode.trim())) {
+      showToast("Pincode must be exactly 6 digits.", "error");
+      return;
+    }
+    if (!/^\d{10}$/.test(address.mobile.trim())) {
+      showToast("Mobile number must be exactly 10 digits.", "error");
+      return;
+    }
+    setStep(3);
+  };
 
   // Redirect to cart if empty
   useEffect(() => {
@@ -186,37 +204,38 @@ export function CheckoutPage() {
   const renderStepIndicator = () => (
     <div className="flex justify-between items-center mb-6 px-2 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
       <div className="flex flex-col items-center cursor-pointer" onClick={() => navigate('/cart')}>
-        <div className="w-6 h-6 rounded-full bg-[#036e26] text-white flex items-center justify-center text-xs font-bold">✓</div>
-        <span className="text-[10px] text-[#036e26] font-bold mt-1">Cart</span>
+        <div className="w-6 h-6 rounded-full bg-brand-green text-white flex items-center justify-center text-xs font-bold">✓</div>
+        <span className="text-[10px] text-brand-orange font-bold mt-1">Cart</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-brand-green' : 'bg-gray-300'}`}></div>
       
       <div className="flex flex-col items-center">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-brand-green text-white' : 'bg-gray-300 text-white'}`}>
           {step > 2 ? '✓' : (token ? '✓' : '1')}
         </div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#036e26]' : 'text-gray-500'}`}>{token ? 'Auth' : 'Login'}</span>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-brand-orange' : 'text-gray-500'}`}>{token ? 'Auth' : 'Login'}</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 2 ? 'bg-brand-green' : 'bg-gray-300'}`}></div>
 
       <div className="flex flex-col items-center">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 2 ? 'bg-brand-green text-white' : 'bg-gray-300 text-white'}`}>
           {step > 2 ? '✓' : '2'}
         </div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-[#036e26]' : 'text-gray-500'}`}>Address</span>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 2 ? 'text-brand-orange' : 'text-gray-500'}`}>Address</span>
       </div>
-      <div className={`h-px flex-1 mx-2 ${step >= 3 ? 'bg-[#036e26]' : 'bg-gray-300'}`}></div>
+      <div className={`h-px flex-1 mx-2 ${step >= 3 ? 'bg-brand-green' : 'bg-gray-300'}`}></div>
       <div className={`flex flex-col items-center ${step < 3 ? 'opacity-50' : ''}`}>
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 3 ? 'bg-[#036e26] text-white' : 'bg-gray-300 text-white'}`}>3</div>
-        <span className={`text-[10px] font-bold mt-1 ${step >= 3 ? 'text-[#036e26]' : 'text-gray-500'}`}>Payment</span>
+        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${step >= 3 ? 'bg-brand-green text-white' : 'bg-gray-300 text-white'}`}>3</div>
+        <span className={`text-[10px] font-bold mt-1 ${step >= 3 ? 'text-brand-orange' : 'text-gray-500'}`}>Payment</span>
       </div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-gray-50 pb-36 font-sans">
-      <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-40 px-4 h-16 flex items-center justify-center relative shadow-sm">
-        <button onClick={() => step === 3 ? setStep(2) : navigate('/cart')} className="absolute left-4 p-2 -ml-2 text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
+      {/* Mobile App Bar */}
+      <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-4 py-4 flex items-center justify-center md:hidden">
+        <button onClick={() => step === 3 ? setStep(2) : step === 2 ? setStep(1) : navigate('/cart')} className="absolute left-4 p-2 -ml-2 text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
           <ChevronLeft className="w-6 h-6" />
         </button>
         <h1 className="font-serif text-xl font-bold text-gray-900 tracking-wide">Checkout</h1>
@@ -302,11 +321,11 @@ export function CheckoutPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Pincode</label>
-                    <input value={address.pincode} onChange={e => setAddress({...address, pincode: e.target.value})} className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
+                    <input value={address.pincode} inputMode="numeric" maxLength={6} onChange={e => setAddress({...address, pincode: e.target.value.replace(/\D/g, '')})} className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
                   </div>
                   <div>
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Mobile</label>
-                    <input value={address.mobile} onChange={e => setAddress({...address, mobile: e.target.value})} className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
+                    <input value={address.mobile} inputMode="numeric" maxLength={10} onChange={e => setAddress({...address, mobile: e.target.value.replace(/\D/g, '')})} className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
                   </div>
                 </div>
               </div>
@@ -417,7 +436,7 @@ export function CheckoutPage() {
                 </button>
               ) : step === 2 ? (
                 <button 
-                  onClick={() => setStep(3)}
+                  onClick={handleProceedToPayment}
                   className="w-full bg-gradient-to-r from-brand-orange to-brand-maroon text-white font-bold text-base rounded-xl py-4 shadow-lg shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
                 >
                   Proceed to Payment
@@ -485,7 +504,7 @@ export function CheckoutPage() {
             </button>
           ) : step === 2 ? (
             <button 
-              onClick={() => setStep(3)}
+              onClick={handleProceedToPayment}
               className="w-full bg-gradient-to-r from-brand-orange to-brand-maroon text-white font-bold text-base rounded-xl py-4 shadow-lg shadow-brand-orange/20 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
             >
               Proceed to Payment
@@ -528,10 +547,10 @@ export function CheckoutPage() {
       {isPlacingOrder && (
         <div ref={overlayRef} className="fixed inset-0 z-[100] bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center w-full h-full">
           <div className="flex flex-col items-center gap-4">
-            <div ref={iconRef} className="w-24 h-24 bg-[#036e26] rounded-full flex items-center justify-center shadow-lg">
+            <div ref={iconRef} className="w-24 h-24 bg-brand-green rounded-full flex items-center justify-center shadow-lg">
               <CheckCircle className="w-12 h-12 text-white" strokeWidth={2.5} />
             </div>
-            <h2 ref={textRef} className="text-2xl font-serif font-bold text-[#036e26]">Order Confirmed!</h2>
+            <h2 ref={textRef} className="text-2xl font-serif font-bold text-brand-orange">Order Confirmed!</h2>
             <p className="text-sm text-gray-500">Redirecting to tracking...</p>
           </div>
         </div>

@@ -30,11 +30,11 @@ export function FAQPage() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <div className="bg-[#f1f3f6] min-h-screen pb-24 md:pb-16 font-sans">
+    <div className="bg-brand-green min-h-screen pb-24 md:pb-16 font-sans">
       <Header title="FAQs" />
       
       {/* Top Banner */}
-      <div className="bg-[#036e26] text-white py-10 md:py-14 px-4">
+      <div className="bg-brand-green text-white py-10 md:py-14 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold mb-4">Frequently Asked Questions</h1>
           <p className="text-sm md:text-base text-green-100 max-w-2xl mx-auto">

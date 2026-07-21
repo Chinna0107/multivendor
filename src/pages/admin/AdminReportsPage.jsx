@@ -26,63 +26,63 @@ export function AdminReportsPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-4 border-[#036e26]/20 border-t-[#036e26] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-brand-orange/20 border-t-[#036e26] rounded-full animate-spin" />
     </div>
   );
 
   return (
     <div className="w-full max-w-5xl mx-auto">
       <div className="mb-6">
-        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#036e26]">Reports & Analytics</h1>
-        <p className="text-[#036e26]/40 text-xs font-sans mt-0.5">Download data and view store performance</p>
+        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-orange">Reports & Analytics</h1>
+        <p className="text-brand-orange/40 text-xs font-sans mt-0.5">Download data and view store performance</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-white rounded-2xl border border-[#036e26]/10 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-brand-orange/10 p-5 shadow-sm">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-xl bg-gold/10 text-amber-500 flex items-center justify-center">
               <DollarSign className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-sans text-[#036e26]/50 uppercase tracking-wider font-semibold">Total Revenue</p>
-              <p className="text-xl font-serif font-bold text-[#036e26]">₹{stats?.totalRevenue || 0}</p>
+              <p className="text-xs font-sans text-brand-orange/50 uppercase tracking-wider font-semibold">Total Revenue</p>
+              <p className="text-xl font-serif font-bold text-brand-orange">₹{stats?.totalRevenue || 0}</p>
             </div>
           </div>
-          <button onClick={() => downloadReport('revenue')} className="w-full mt-2 flex items-center justify-center gap-2 bg-[#FDFBF7] text-[#036e26] py-2 rounded-xl text-sm font-semibold hover:bg-[#036e26]/10 transition-colors">
+          <button onClick={() => downloadReport('revenue')} className="w-full mt-2 flex items-center justify-center gap-2 bg-brand-green text-brand-orange py-2 rounded-xl text-sm font-semibold hover:bg-brand-green/10 transition-colors">
             <Download className="w-4 h-4" /> Download Sales Report
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#036e26]/10 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-brand-orange/10 p-5 shadow-sm">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-sans text-[#036e26]/50 uppercase tracking-wider font-semibold">Total Orders</p>
-              <p className="text-xl font-serif font-bold text-[#036e26]">{stats?.totalOrders || 0}</p>
+              <p className="text-xs font-sans text-brand-orange/50 uppercase tracking-wider font-semibold">Total Orders</p>
+              <p className="text-xl font-serif font-bold text-brand-orange">{stats?.totalOrders || 0}</p>
             </div>
           </div>
-          <button onClick={() => downloadReport('orders')} className="w-full mt-2 flex items-center justify-center gap-2 bg-[#FDFBF7] text-[#036e26] py-2 rounded-xl text-sm font-semibold hover:bg-[#036e26]/10 transition-colors">
+          <button onClick={() => downloadReport('orders')} className="w-full mt-2 flex items-center justify-center gap-2 bg-brand-green text-brand-orange py-2 rounded-xl text-sm font-semibold hover:bg-brand-green/10 transition-colors">
             <Download className="w-4 h-4" /> Download Orders Report
           </button>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-[#036e26]/10 p-5 shadow-sm">
-        <h3 className="font-serif font-bold text-[#036e26] mb-4">Export Data Center</h3>
+      <div className="bg-white rounded-2xl border border-brand-orange/10 p-5 shadow-sm">
+        <h3 className="font-serif font-bold text-brand-orange mb-4">Export Data Center</h3>
         <div className="space-y-3">
           {[
             { title: "Products Inventory", desc: "Download full list of products, stock, and pricing", type: "products" },
             { title: "Customer Database", desc: "Download registered users and their details", type: "customers" },
             { title: "Coupon Usage", desc: "Download history of used discount codes", type: "coupons" }
           ].map((report, i) => (
-            <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-[#FDFBF7] border border-[#036e26]/5">
+            <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl bg-brand-green border border-brand-orange/5">
               <div>
-                <p className="font-sans font-bold text-[#036e26]">{report.title}</p>
-                <p className="text-xs text-[#036e26]/50">{report.desc}</p>
+                <p className="font-sans font-bold text-brand-orange">{report.title}</p>
+                <p className="text-xs text-brand-orange/50">{report.desc}</p>
               </div>
-              <button onClick={() => downloadReport(report.type)} className="flex items-center justify-center gap-2 bg-white border border-[#036e26]/20 text-[#036e26] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#036e26] hover:text-white transition-colors">
+              <button onClick={() => downloadReport(report.type)} className="flex items-center justify-center gap-2 bg-white border border-brand-orange/20 text-brand-orange px-4 py-2 rounded-lg text-sm font-semibold hover:bg-brand-green hover:text-white transition-colors">
                 <Download className="w-4 h-4" /> Export CSV
               </button>
             </div>

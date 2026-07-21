@@ -81,7 +81,7 @@ export function AboutPage() {
             
             <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-100">
               <div>
-                <h4 className="text-3xl font-extrabold text-[#036e26] mb-1">1M+</h4>
+                <h4 className="text-3xl font-extrabold text-brand-orange mb-1">1M+</h4>
                 <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Happy Customers</p>
               </div>
               <div>

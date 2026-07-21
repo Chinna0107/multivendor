@@ -365,7 +365,7 @@ export function ProductDetailPage() {
                       <Star className="w-3 h-3 fill-current text-gray-400 shrink-0" />
                       <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div 
-                          className={`h-full ${star >= 4 ? 'bg-[#036e26]' : star === 3 ? 'bg-[#ff9f00]' : 'bg-[#ff6161]'}`} 
+                          className={`h-full ${star >= 4 ? 'bg-brand-green' : star === 3 ? 'bg-[#ff9f00]' : 'bg-[#ff6161]'}`} 
                           style={{ width: `${[70, 20, 5, 3, 2][idx]}%` }}
                         />
                       </div>

@@ -12,11 +12,11 @@ export function ContactPage() {
   ];
 
   return (
-    <div className="bg-[#f1f3f6] min-h-screen pb-24 md:pb-16 font-sans">
+    <div className="bg-brand-green min-h-screen pb-24 md:pb-16 font-sans">
       <Header title="Help Center" />
       
       {/* Top Banner */}
-      <div className="bg-[#036e26] text-white py-10 md:py-14 px-4">
+      <div className="bg-brand-green text-white py-10 md:py-14 px-4">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">Indbasket Help Center</h1>
           <p className="text-sm md:text-base text-green-100">We are here to help you 24x7. How can we assist you today?</p>
@@ -85,7 +85,7 @@ export function ContactPage() {
           <div className="w-full lg:w-2/3 flex flex-col">
             <div className="bg-white rounded-sm shadow-sm border border-gray-100 p-6 md:p-8 flex-1 flex flex-col">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
-                <MessageSquare className="w-6 h-6 text-[#036e26]" />
+                <MessageSquare className="w-6 h-6 text-brand-orange" />
                 <h2 className="text-lg md:text-xl font-bold text-gray-800">Still need help? Write to us.</h2>
               </div>
               

@@ -124,7 +124,7 @@ export function AdminPage() {
           <Shield className="w-5 h-5 text-purple-300" />
           <h1 className="text-base font-bold">Admin Panel</h1>
         </div>
-        <span className="ml-auto text-[11px] bg-white/20 px-2 py-1 rounded-full"><span className="text-[#fe6603]">Ind</span><span className="text-[#036e26]">basket</span></span>
+        <span className="ml-auto text-[11px] bg-white/20 px-2 py-1 rounded-full"><span className="text-[#fe6603]">Ind</span><span className="text-brand-orange">basket</span></span>
       </div>
 
       {/* Tabs */}

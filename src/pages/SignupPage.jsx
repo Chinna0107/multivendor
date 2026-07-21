@@ -49,7 +49,7 @@ export function SignupPage() {
   const displayError = localError || error;
 
   return (
-    <div className="min-h-screen bg-orange-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-brand-green flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
@@ -67,7 +67,7 @@ export function SignupPage() {
               <input
                 name="name" value={form.name} onChange={handleChange} required
                 placeholder="Your full name"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
             </div>
             <div>
@@ -75,7 +75,7 @@ export function SignupPage() {
               <input
                 name="email" type="email" value={form.email} onChange={handleChange} required
                 placeholder="you@example.com"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
               />
             </div>
             <div>
@@ -83,7 +83,7 @@ export function SignupPage() {
               <input
                 name="phone" value={form.phone} onChange={handleChange} required
                 placeholder="+91 98765 43210"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-orange"
               />
             </div>
             <div>
@@ -93,7 +93,7 @@ export function SignupPage() {
                   name="password" type={showPass ? 'text' : 'password'} value={form.password}
                   onChange={handleChange} required minLength={6}
                   placeholder="Min 6 characters"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 pr-10"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-400 pr-10"
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -123,7 +123,7 @@ export function SignupPage() {
                   type="text" inputMode="numeric" maxLength={1} value={digit}
                   onChange={(e) => handleOtpChange(e.target.value, idx)}
                   onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-                  className="w-11 h-12 text-center text-lg font-bold border-2 border-gray-200 rounded-lg focus:outline-none focus:border-orange-400"
+                  className="w-10 h-12 text-center text-lg text-gray-900 font-bold border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-orange bg-gray-50 focus:bg-white"
                 />
               ))}
             </div>

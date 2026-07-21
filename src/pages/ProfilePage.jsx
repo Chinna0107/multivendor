@@ -11,16 +11,18 @@ export function ProfilePage() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4 pb-20">
+      <div className="min-h-screen bg-brand-green flex flex-col items-center justify-center gap-4 pb-20">
         <Header title="My Profile" />
-        <User className="w-16 h-16 text-gray-300 mt-20" />
-        <p className="text-gray-600 font-semibold">You're not logged in</p>
+        <User className="w-16 h-16 text-white/50 mt-20" />
+        <p className="text-white font-semibold">You're not logged in</p>
         <Link to="/login" className="bg-brand-orange text-white font-bold px-8 py-3 rounded-xl text-sm">Login</Link>
         <Link to="/signup" className="text-brand-orange text-sm font-semibold">Create Account</Link>
         <BottomNav />
       </div>
     );
   }
+
+  const initials = user?.name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
 
   const menuItems = [
     { icon: Package, label: 'My Orders', action: () => navigate('/my-orders') },
@@ -30,7 +32,7 @@ export function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-brand-green pb-20">
       <Header title="My Profile" />
       <div className="bg-brand-orange text-white px-6 pt-6 pb-8 rounded-b-[2.5rem] shadow-sm">
         <div className="max-w-4xl mx-auto flex items-center gap-4">

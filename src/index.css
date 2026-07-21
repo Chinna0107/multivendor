@@ -2,21 +2,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-orange: #4A2E1B;
-  --color-brand-maroon: #2D1A10;
+  --color-brand-orange: #fe6603;
+  --color-brand-maroon: #036e26;
   --color-brand-gold: #C69C6D;
   --color-brand-cream: #FDFBF7;
   --color-brand-cream-light: #FFFFFF;
-  --color-brand-green: #3B5F4A;
-
-  /* Admin / Snakzee theme */
-  --color-terracotta: #C8401A;
-  --color-terracotta-dark: #a83414;
-  --color-brown: #3B1F0E;
-  --color-brown-light: #7A5C4A;
-  --color-cream: #FDF6F0;
-  --color-cream-dark: #F5EBE0;
-  --color-gold: #D4A017;
+  --color-brand-green: #045e1a;
 }
 
 @layer utilities {
@@ -35,6 +26,6 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #F8F9FA;
-  color: #333333;
+  background-color: #045e1a;
+  color: #ffffff;
 }

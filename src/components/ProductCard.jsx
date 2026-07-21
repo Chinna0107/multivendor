@@ -86,10 +86,10 @@ export function ProductCard({ product, layout = 'grid' }) {
 
           <div className="flex items-center justify-between mt-auto">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-base font-bold text-gray-900">₹{displayPrice}</span>
-              <span className="text-[9px] text-[#036e26] font-bold bg-[#036e26]/10 px-1 py-0.5 rounded">{defaultSize.size}</span>
+              <span className="text-base font-bold text-brand-orange">₹{displayPrice}</span>
+              <span className="text-[9px] text-brand-green font-bold bg-brand-green/10 px-1 py-0.5 rounded">{defaultSize.size}</span>
             </div>
-            <button onClick={handleAddToCart} className="bg-[#036e26] text-white text-xs font-semibold px-4 py-1.5 rounded-md hover:bg-[#004012] transition-colors flex items-center gap-1">
+            <button onClick={handleAddToCart} className="bg-brand-green text-white text-xs font-semibold px-4 py-1.5 rounded-md hover:bg-green-900 transition-colors flex items-center gap-1">
               <ShoppingCart className="w-3.5 h-3.5" />
               Add
             </button>
@@ -100,7 +100,7 @@ export function ProductCard({ product, layout = 'grid' }) {
             onClick={handleWishlist}
             className="text-gray-300 hover:scale-110 transition-transform bg-white/80 p-1 rounded-full shadow-sm"
           >
-            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-[#fe6603] text-[#fe6603]' : ''}`} />
+            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-brand-orange text-brand-orange' : ''}`} />
           </button>
           <button 
             onClick={handleShare}
@@ -116,11 +116,11 @@ export function ProductCard({ product, layout = 'grid' }) {
   return (
     <div 
       onClick={handleCardClick}
-      className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-[#036e26]/10 cursor-pointer transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 h-full p-3 relative"
+      className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(0,0,0,0.03)] border border-brand-green/10 cursor-pointer transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] hover:-translate-y-1 h-full p-3 relative"
     >
       <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
         <button onClick={handleWishlist} className="p-1.5 hover:scale-110 transition-transform bg-white/90 rounded-full shadow-sm border border-gray-100">
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-[#fe6603] text-[#fe6603]' : 'text-gray-400'}`} />
+          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-brand-orange text-brand-orange' : 'text-gray-400'}`} />
         </button>
         <button onClick={handleShare} className="p-1.5 hover:scale-110 transition-transform bg-white/90 rounded-full shadow-sm border border-gray-100">
           <Share2 className="w-4 h-4 text-gray-400" />
@@ -146,11 +146,11 @@ export function ProductCard({ product, layout = 'grid' }) {
         </div>
 
         <div className="flex flex-col gap-1 mb-3 mt-auto">
-          <span className="text-[9px] text-[#036e26] font-bold bg-[#036e26]/10 px-1.5 py-0.5 rounded w-fit">{defaultSize.size}</span>
-          <span className="text-base font-bold text-gray-900">₹{displayPrice}</span>
+          <span className="text-[9px] text-brand-green font-bold bg-brand-green/10 px-1.5 py-0.5 rounded w-fit">{defaultSize.size}</span>
+          <span className="text-base font-bold text-brand-orange">₹{displayPrice}</span>
         </div>
 
-        <button onClick={handleAddToCart} className="w-full bg-[#036e26] text-white text-xs font-semibold py-2 rounded-lg hover:bg-[#004012] transition-colors flex items-center justify-center gap-1.5">
+        <button onClick={handleAddToCart} className="w-full bg-brand-green text-white text-xs font-semibold py-2 rounded-lg hover:bg-green-900 transition-colors flex items-center justify-center gap-1.5">
           <ShoppingCart className="w-4 h-4" />
           Add to Cart
         </button>

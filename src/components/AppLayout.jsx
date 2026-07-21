@@ -17,8 +17,8 @@ export function AppLayout({ children }) {
   const showBottomNav = ['/', '/wishlist', '/profile', '/dashboard'].includes(pathname) || pathname.startsWith('/category/');
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center w-full">
-      <div className="w-full md:max-w-full max-w-5xl mx-auto bg-white relative shadow-sm min-h-screen flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-brand-green flex justify-center w-full">
+      <div className="w-full md:max-w-full max-w-5xl mx-auto bg-brand-green relative shadow-sm min-h-screen flex flex-col overflow-x-hidden">
         <Toast />
         
         {/* Main Content Area */}
