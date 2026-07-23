@@ -30,7 +30,7 @@ export function AdminCustomersPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-4 border-brand-orange/20 border-t-[#036e26] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#036e26] rounded-full animate-spin" />
     </div>
   );
 
@@ -38,22 +38,22 @@ export function AdminCustomersPage() {
     <div className="w-full max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-orange">Customers</h1>
-          <p className="text-brand-orange/40 text-xs font-sans mt-0.5">{customers.length} total users</p>
+          <h1 className="text-2xl font-bold text-gray-900">Customers</h1>
+          <p className="text-gray-400 text-xs mt-0.5">{customers.length} total users</p>
         </div>
       </div>
 
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-orange/40" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
         <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search customers by name, email, or phone..."
-          className="w-full pl-9 pr-4 py-3 rounded-xl bg-white border border-brand-orange/10 text-brand-orange font-sans text-sm focus:outline-none focus:border-brand-orange/30 shadow-sm" />
+          className="w-full pl-9 pr-4 py-3 rounded-xl bg-white border border-gray-100 text-gray-900 text-sm focus:outline-none focus:border-brand-orange/30 shadow-sm" />
       </div>
 
-      <div className="bg-white rounded-2xl border border-brand-orange/10 overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm font-sans min-w-[600px]">
+          <table className="w-full text-sm min-w-[600px]">
             <thead>
-              <tr className="bg-brand-green text-brand-orange/60 text-xs uppercase tracking-wider border-b border-brand-orange/10">
+              <tr className="bg-white text-gray-900/60 text-xs uppercase tracking-wider border-b border-gray-100">
                 <th className="text-left py-4 px-4 sm:px-6 font-semibold">Name</th>
                 <th className="text-left py-4 px-4 sm:px-6 font-semibold">Contact</th>
                 <th className="text-left py-4 px-4 sm:px-6 font-semibold">Role</th>
@@ -63,14 +63,14 @@ export function AdminCustomersPage() {
             <tbody className="divide-y divide-[#036e26]/5">
               {filtered.map((customer, i) => (
                 <motion.tr key={customer.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.02 }}
-                  className="hover:bg-brand-green/50 transition-colors">
+                  className="hover:bg-gray-500 transition-colors">
                   <td className="py-4 px-4 sm:px-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-brand-green/10 flex items-center justify-center text-brand-orange font-bold">
+                      <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-900 font-bold">
                         {(customer.name || "U")[0].toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-semibold text-brand-orange">{customer.name || "Unknown User"}</p>
+                        <p className="font-semibold text-gray-900">{customer.name || "Unknown User"}</p>
                         {customer.is_verified ? (
                           <span className="text-[10px] text-green-600 bg-green-50 px-1.5 py-0.5 rounded flex items-center gap-1 w-fit mt-0.5">
                             Verified
@@ -84,11 +84,11 @@ export function AdminCustomersPage() {
                     </div>
                   </td>
                   <td className="py-4 px-4 sm:px-6 space-y-1">
-                    <div className="flex items-center gap-1.5 text-xs text-brand-orange/70">
+                    <div className="flex items-center gap-1.5 text-xs text-gray-700">
                       <Mail className="w-3.5 h-3.5" /> {customer.email}
                     </div>
                     {customer.phone && (
-                      <div className="flex items-center gap-1.5 text-xs text-brand-orange/70">
+                      <div className="flex items-center gap-1.5 text-xs text-gray-700">
                         <Phone className="w-3.5 h-3.5" /> {customer.phone}
                       </div>
                     )}
@@ -100,7 +100,7 @@ export function AdminCustomersPage() {
                       {customer.role || "user"}
                     </span>
                   </td>
-                  <td className="py-4 px-4 sm:px-6 text-xs text-brand-orange/60">
+                  <td className="py-4 px-4 sm:px-6 text-xs text-gray-900/60">
                     <div className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
                       {new Date(customer.created_at).toLocaleDateString("en-IN")}
@@ -110,7 +110,7 @@ export function AdminCustomersPage() {
               ))}
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-12 text-center text-brand-orange/50">
+                  <td colSpan={4} className="py-12 text-center text-gray-500">
                     No customers found
                   </td>
                 </tr>

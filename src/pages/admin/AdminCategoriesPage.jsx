@@ -8,8 +8,9 @@ export function AdminCategoriesPage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editCategory, setEditCategory] = useState(null);
-  const [formData, setFormData] = useState({ name: "", models: [], image_url: "" });
+  const [formData, setFormData] = useState({ name: "", models: [], image_url: "", custom_fields: [] });
   const [newModel, setNewModel] = useState("");
+  const [newField, setNewField] = useState({ name: "", type: "text", required: true });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isNew, setIsNew] = useState(false);
@@ -60,15 +61,17 @@ export function AdminCategoriesPage() {
   };
 
   const handleAdd = () => {
-    setFormData({ name: "", models: [], image_url: "" });
+    setFormData({ name: "", models: [], image_url: "", custom_fields: [] });
     setNewModel("");
+    setNewField({ name: "", type: "text", required: true });
     setEditCategory({});
     setIsNew(true);
   };
 
   const handleEdit = (cat) => {
-    setFormData({ name: cat.name, models: cat.models || [], image_url: cat.image_url || "" });
+    setFormData({ name: cat.name, models: cat.models || [], image_url: cat.image_url || "", custom_fields: cat.custom_fields || [] });
     setNewModel("");
+    setNewField({ name: "", type: "text", required: true });
     setEditCategory(cat);
     setIsNew(false);
   };
@@ -95,6 +98,19 @@ export function AdminCategoriesPage() {
     setFormData({ ...formData, models: formData.models.filter(m => m !== modelToRemove) });
   };
 
+  const addCustomField = () => {
+    if (newField.name.trim()) {
+      setFormData({ ...formData, custom_fields: [...formData.custom_fields, { ...newField, name: newField.name.trim() }] });
+      setNewField({ name: "", type: "text", required: true });
+    }
+  };
+
+  const removeCustomField = (index) => {
+    const updated = [...formData.custom_fields];
+    updated.splice(index, 1);
+    setFormData({ ...formData, custom_fields: updated });
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -103,7 +119,8 @@ export function AdminCategoriesPage() {
       const payload = {
         name: formData.name,
         models: formData.models,
-        image_url: formData.image_url
+        image_url: formData.image_url,
+        custom_fields: formData.custom_fields
       };
       
       await fetch(url, {
@@ -122,7 +139,7 @@ export function AdminCategoriesPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-4 border-brand-orange/20 border-t-[#036e26] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#036e26] rounded-full animate-spin" />
     </div>
   );
 
@@ -130,21 +147,21 @@ export function AdminCategoriesPage() {
     <div className="w-full max-w-5xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-brand-orange">Categories & Models</h1>
-          <p className="text-brand-orange/40 text-xs font-sans mt-0.5">Manage categories and their available models</p>
+          <h1 className="text-2xl font-bold text-gray-900">Categories & Models</h1>
+          <p className="text-gray-400 text-xs mt-0.5">Manage categories and their available models</p>
         </div>
         <button onClick={handleAdd}
-          className="flex items-center gap-2 bg-brand-green hover:bg-[#004012] text-white px-4 py-2.5 rounded-xl font-semibold transition-colors">
+          className="flex items-center gap-2 bg-white hover:bg-[#004012] text-white px-4 py-2.5 rounded-xl font-semibold transition-colors">
           <Plus className="w-4 h-4" /> Add Category
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {categories.map((cat, index) => (
-          <motion.div key={cat.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-2xl border border-brand-orange/10 overflow-hidden shadow-sm flex flex-col">
-            <div className="bg-brand-green border-b border-brand-orange/5 p-4 flex items-center justify-between">
+          <motion.div key={cat.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }} className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm flex flex-col">
+            <div className="bg-white border-b border-brand-orange/5 p-4 flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-white border border-brand-orange/10 overflow-hidden flex items-center justify-center text-brand-orange">
+                <div className="w-12 h-12 rounded-xl bg-white border border-gray-100 overflow-hidden flex items-center justify-center text-gray-900">
                   {cat.image_url ? (
                     <img src={cat.image_url} alt={cat.name} className="w-full h-full object-cover" />
                   ) : (
@@ -152,26 +169,43 @@ export function AdminCategoriesPage() {
                   )}
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-lg text-brand-orange">{cat.name}</h3>
-                  <p className="text-xs text-brand-orange/50 mt-0.5">{cat.models?.length || 0} Models</p>
+                  <h3 className="font-bold text-lg text-gray-900">{cat.name}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">{cat.models?.length || 0} Models</p>
                 </div>
               </div>
               <div className="flex gap-2">
-                <button onClick={() => handleEdit(cat)} className="p-2 text-brand-orange hover:bg-brand-green/10 rounded-full transition-colors"><Edit2 className="w-4 h-4" /></button>
+                <button onClick={() => handleEdit(cat)} className="p-2 text-gray-900 hover:bg-gray-50 rounded-full transition-colors"><Edit2 className="w-4 h-4" /></button>
                 <button onClick={() => handleDelete(cat.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"><Trash2 className="w-4 h-4" /></button>
               </div>
             </div>
             
             <div className="p-5 flex-1 bg-white">
-              <h4 className="text-xs font-bold text-brand-orange/40 uppercase tracking-wider mb-3">Available Models</h4>
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Available Models</h4>
               {(!cat.models || cat.models.length === 0) ? (
-                <p className="text-sm text-brand-orange/30">No models added.</p>
+                <p className="text-sm text-gray-900/30">No models added.</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {cat.models.map((model, i) => (
-                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-green/5 border border-brand-orange/10 text-sm font-medium text-brand-orange">
-                      <Tag className="w-3 h-3 text-brand-orange" /> {model}
+                    <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100 text-sm font-medium text-gray-900">
+                      <Tag className="w-3 h-3 text-gray-900" /> {model}
                     </span>
+                  ))}
+                </div>
+              )}
+
+              <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 mt-4">Custom Fields</h4>
+              {(!cat.custom_fields || cat.custom_fields.length === 0) ? (
+                <p className="text-sm text-gray-900/30">No custom fields.</p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {cat.custom_fields.map((field, i) => (
+                    <div key={i} className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-lg border border-gray-100">
+                      <span className="text-sm font-medium text-gray-700">{field.name}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs px-2 py-1 bg-gray-200 text-gray-600 rounded capitalize">{field.type}</span>
+                        {field.required && <span className="text-xs px-2 py-1 bg-red-100 text-red-600 rounded">Required</span>}
+                      </div>
+                    </div>
                   ))}
                 </div>
               )}
@@ -180,7 +214,7 @@ export function AdminCategoriesPage() {
         ))}
 
         {categories.length === 0 && (
-          <div className="col-span-full bg-white rounded-2xl border border-brand-orange/10 p-12 text-center text-brand-orange/50">
+          <div className="col-span-full bg-white rounded-2xl border border-gray-100 p-12 text-center text-gray-500">
             No categories created yet. Click "Add Category" to get started.
           </div>
         )}
@@ -189,68 +223,105 @@ export function AdminCategoriesPage() {
       {editCategory && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-white rounded-2xl w-full max-w-md overflow-hidden max-h-[90vh] flex flex-col">
-            <div className="bg-white border-b border-brand-orange/10 px-6 py-4 flex items-center justify-between shrink-0">
-              <h2 className="font-serif text-xl font-bold text-brand-orange">{isNew ? "Add" : "Edit"} Category</h2>
-              <button onClick={() => setEditCategory(null)} className="text-brand-orange/50 hover:text-brand-orange">
+            <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shrink-0">
+              <h2 className="text-xl font-bold text-gray-900">{isNew ? "Add" : "Edit"} Category</h2>
+              <button onClick={() => setEditCategory(null)} className="text-gray-500 hover:text-gray-900">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             <div className="p-6 space-y-5 overflow-y-auto">
               <div>
-                <label className="text-xs font-sans font-semibold text-brand-orange/70 mb-1 block">Category Name</label>
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">Category Name</label>
                 <input value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="e.g. Mobile Phones"
-                  className="w-full px-3 py-2 rounded-lg bg-brand-green border border-brand-orange/10 focus:outline-none focus:border-brand-orange/40" />
+                  className="w-full px-3 py-2 rounded-lg bg-white border border-gray-100 text-gray-900 focus:outline-none focus:border-gray-300" />
               </div>
               
               <div>
-                <label className="text-xs font-sans font-semibold text-brand-orange/70 mb-2 block">Category Image</label>
+                <label className="text-xs font-semibold text-gray-700 mb-2 block">Category Image</label>
                 <div className="flex items-center gap-3">
                   {formData.image_url ? (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden border border-brand-orange/20 flex-shrink-0">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0">
                       <img src={formData.image_url} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-brand-green border border-brand-orange/10 flex-shrink-0 flex items-center justify-center text-brand-orange/20">
+                    <div className="w-16 h-16 rounded-lg bg-white border border-gray-100 flex-shrink-0 flex items-center justify-center text-gray-900/20">
                       <FolderTree className="w-6 h-6" />
                     </div>
                   )}
                   <div className="flex-1">
                     <input type="file" id="cat_image" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                    <label htmlFor="cat_image" className="inline-flex items-center gap-2 bg-brand-green hover:bg-brand-green/70 text-brand-orange border border-brand-orange/20 px-3 py-1.5 rounded-lg text-sm font-semibold cursor-pointer transition-colors">
+                    <label htmlFor="cat_image" className="inline-flex items-center gap-2 bg-white hover:bg-white/70 text-gray-900 border border-gray-200 px-3 py-1.5 rounded-lg text-sm font-semibold cursor-pointer transition-colors">
                       <Upload className="w-4 h-4" /> {uploading ? "Uploading..." : "Upload Image"}
                     </label>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-brand-orange/10">
-                <label className="text-xs font-sans font-semibold text-brand-orange/70 mb-1 block">Available Models</label>
+              <div className="pt-2 border-t border-gray-100">
+                <label className="text-xs font-semibold text-gray-700 mb-1 block">Available Models</label>
                 <div className="flex gap-2 mb-3">
                   <input value={newModel} onChange={(e) => setNewModel(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && addModel()} placeholder="e.g. iPhone 15"
-                    className="flex-1 px-3 py-2 rounded-lg bg-brand-green border border-brand-orange/10 focus:outline-none focus:border-brand-orange/40" />
-                  <button onClick={addModel} className="bg-brand-green text-brand-orange border border-brand-orange/20 px-4 rounded-lg font-semibold hover:bg-brand-green/10 transition-colors">
+                    className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-100 text-gray-900 focus:outline-none focus:border-gray-300" />
+                  <button onClick={addModel} className="bg-white text-gray-900 border border-gray-200 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
                     Add
                   </button>
                 </div>
                 
                 <div className="flex flex-wrap gap-2">
                   {formData.models.map((model, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 pl-3 pr-1 py-1 rounded-lg bg-white border border-brand-orange/20 text-sm font-medium text-brand-orange">
+                    <span key={i} className="inline-flex items-center gap-1 pl-3 pr-1 py-1 rounded-lg bg-white border border-gray-200 text-sm font-medium text-gray-900">
                       {model}
                       <button onClick={() => removeModel(model)} className="p-1 hover:bg-red-50 text-red-400 hover:text-red-600 rounded-md transition-colors"><X className="w-3 h-3" /></button>
                     </span>
                   ))}
                   {formData.models.length === 0 && (
-                    <span className="text-sm text-brand-orange/40 italic">No models added. Type above to add.</span>
+                    <span className="text-sm text-gray-400 italic">No models added. Type above to add.</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-gray-100">
+                <label className="text-xs font-semibold text-gray-700 mb-2 block">Dynamic Form Builder (Add Custom Fields)</label>
+                <div className="grid grid-cols-12 gap-2 mb-3">
+                  <input value={newField.name} onChange={(e) => setNewField({...newField, name: e.target.value})} placeholder="Field Name (e.g. Warranty)"
+                    className="col-span-5 px-3 py-2 rounded-lg bg-white border border-gray-100 text-gray-900 focus:outline-none focus:border-gray-300 text-sm" />
+                  <select value={newField.type} onChange={(e) => setNewField({...newField, type: e.target.value})}
+                    className="col-span-4 px-3 py-2 rounded-lg bg-white border border-gray-100 text-gray-900 focus:outline-none focus:border-gray-300 text-sm">
+                    <option value="text">Short Text</option>
+                    <option value="long_text">Long Text</option>
+                    <option value="number">Number</option>
+                    <option value="upload">Upload (Image/PDF)</option>
+                  </select>
+                  <label className="col-span-3 flex items-center justify-center gap-1 bg-white border border-gray-100 rounded-lg cursor-pointer px-2">
+                    <input type="checkbox" checked={newField.required} onChange={(e) => setNewField({...newField, required: e.target.checked})} className="w-3 h-3" />
+                    <span className="text-xs font-semibold text-gray-900">Required</span>
+                  </label>
+                </div>
+                <button onClick={addCustomField} className="w-full py-2 bg-white text-gray-900 border border-gray-200 rounded-lg font-semibold hover:bg-gray-50 transition-colors mb-3 text-sm">
+                  + Add Field
+                </button>
+                
+                <div className="flex flex-col gap-2">
+                  {formData.custom_fields.map((field, i) => (
+                    <div key={i} className="flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-lg">
+                      <div>
+                        <span className="text-sm font-medium text-gray-900 block">{field.name}</span>
+                        <span className="text-xs text-gray-500 capitalize">{field.type} {field.required ? '(Required)' : '(Optional)'}</span>
+                      </div>
+                      <button onClick={() => removeCustomField(i)} className="p-1 hover:bg-red-50 text-red-400 hover:text-red-600 rounded-md transition-colors"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  ))}
+                  {formData.custom_fields.length === 0 && (
+                    <span className="text-sm text-gray-400 italic">No custom fields added.</span>
                   )}
                 </div>
               </div>
             </div>
             
-            <div className="border-t border-brand-orange/10 px-6 py-4 flex gap-3 shrink-0 bg-white">
-              <button onClick={() => setEditCategory(null)} className="flex-1 px-4 py-2 bg-brand-green text-brand-orange rounded-xl font-semibold hover:bg-brand-green/70">Cancel</button>
-              <button onClick={handleSave} disabled={saving || uploading || !formData.name} className="flex-1 px-4 py-2 bg-brand-green text-white rounded-xl font-semibold flex justify-center items-center gap-2 disabled:opacity-50 hover:bg-[#004012] transition-colors">
+            <div className="border-t border-gray-100 px-6 py-4 flex gap-3 shrink-0 bg-white">
+              <button onClick={() => setEditCategory(null)} className="flex-1 px-4 py-2 bg-white text-gray-900 rounded-xl font-semibold hover:bg-white/70">Cancel</button>
+              <button onClick={handleSave} disabled={saving || uploading || !formData.name} className="flex-1 px-4 py-2 bg-[#fe6603] text-white hover:bg-[#e55c02] rounded-xl font-semibold flex justify-center items-center gap-2 disabled:opacity-50 hover:bg-[#004012] transition-colors">
                 {saving ? "Saving..." : <><Save className="w-4 h-4" /> Save</>}
               </button>
             </div>

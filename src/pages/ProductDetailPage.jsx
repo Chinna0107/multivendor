@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Share2, Heart, ShoppingCart, Star, Plus, Minus, Tag, MapPin, ChevronRight, Zap, X, RefreshCcw, Banknote } from 'lucide-react';
+import { Share2, Heart, ShoppingCart, Star, Tag, MapPin, Zap, X, RefreshCcw, Banknote } from 'lucide-react';
 import { Header } from '../components/Header';
 import { ProductCard } from '../components/ProductCard';
 import { useCartStore } from '../store/useCartStore';
@@ -18,7 +18,8 @@ export function ProductDetailPage() {
   const { addToCart } = useCartStore();
   const { toggleWishlist, items: wishlistItems } = useWishlistStore();
   
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
+  const [selectedSizeIdx, setSelectedSizeIdx] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [pincode, setPincode] = useState('');
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -27,23 +28,32 @@ export function ProductDetailPage() {
   
   const container = useRef(null);
 
-  const productImages = product ? ((product.images && product.images.length > 0) 
-    ? product.images 
-    : (product.image_url ? [product.image_url] : [])) : [];
+  let parsedSizes = [];
+  try {
+    if (typeof product?.sizes === 'string') {
+      parsedSizes = JSON.parse(product.sizes);
+    } else if (Array.isArray(product?.sizes)) {
+      parsedSizes = product.sizes;
+    }
+  } catch(e) {}
+
+  const isHierarchical = parsedSizes.length > 0 && Array.isArray(parsedSizes[0].sizes);
+
+  const currentVariant = isHierarchical ? parsedSizes[selectedVariantIdx] : null;
+  const currentSizesArray = isHierarchical ? currentVariant.sizes : parsedSizes;
+  const selectedSizeObj = currentSizesArray && currentSizesArray.length > 0 ? currentSizesArray[selectedSizeIdx] : { size: 'Standard', price: product?.price || 0 };
+
+  const productImages = (currentVariant && currentVariant.images && currentVariant.images.length > 0) 
+    ? currentVariant.images 
+    : (product ? ((product.images && product.images.length > 0) ? product.images : (product.image_url ? [product.image_url] : [])) : []);
     
   const [mainImg, setMainImg] = useState(null);
 
   useEffect(() => {
-    if (productImages.length > 0 && !mainImg) {
+    if (productImages.length > 0 && !productImages.includes(mainImg)) {
       setMainImg(productImages[0]);
     }
-  }, [productImages, mainImg]);
-
-  useEffect(() => {
-    if (product && product.sizes && product.sizes.length > 0 && !selectedSize) {
-      setSelectedSize(product.sizes[0]);
-    }
-  }, [product, selectedSize]);
+  }, [productImages, selectedVariantIdx]);
 
   useGSAP(() => {
     if (product) {
@@ -78,11 +88,13 @@ export function ProductDetailPage() {
   }
 
   const handleAddToCart = () => {
-    addToCart(product, selectedSize || { size: 'Standard', price: 0 }, quantity);
+    const variantWithColor = { ...selectedSizeObj, color: parsedSizes[selectedVariantIdx]?.color || '' };
+    addToCart(product, variantWithColor, quantity);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, selectedSize || { size: 'Standard', price: 0 }, quantity);
+    const variantWithColor = { ...selectedSizeObj, color: parsedSizes[selectedVariantIdx]?.color || '' };
+    addToCart(product, variantWithColor, quantity);
     navigate('/cart');
   };
 
@@ -119,9 +131,13 @@ export function ProductDetailPage() {
     }
   };
 
-  // Mock data for Flipkart-like UI
-  const originalPrice = selectedSize ? Math.round(selectedSize.price * 1.4) : 0;
-  const discountPercent = originalPrice > 0 ? Math.round(((originalPrice - selectedSize.price) / originalPrice) * 100) : 0;
+  const originalPrice = selectedSizeObj ? Math.round(selectedSizeObj.price * 1.4) : 0;
+  const discountPercent = originalPrice > 0 ? Math.round(((originalPrice - selectedSizeObj.price) / originalPrice) * 100) : 0;
+  
+  let customAttrs = {};
+  try {
+    customAttrs = typeof product.custom_attributes === 'string' ? JSON.parse(product.custom_attributes) : product.custom_attributes || {};
+  } catch(e) {}
 
   return (
     <div ref={container} className="min-h-screen bg-white pb-28 md:pb-12">
@@ -194,6 +210,8 @@ export function ProductDetailPage() {
             <div className="fade-up">
               {/* Title & Ratings */}
               <h1 className="text-[18px] text-[#212121] mb-2">{product.name}</h1>
+              <div className="text-gray-500 mb-2">{product.short_description}</div>
+              
               <div className="flex items-center gap-2 mb-3">
                 <div className="flex items-center gap-1 bg-[#388e3c] text-white px-1.5 py-0.5 rounded-sm text-[12px] font-bold">
                   4.5 <Star className="w-3 h-3 fill-current" />
@@ -203,7 +221,7 @@ export function ProductDetailPage() {
 
               {/* Price */}
               <div className="flex items-baseline gap-3 mb-4">
-                <span className="text-[28px] font-medium text-[#212121]">₹{selectedSize?.price || 0}</span>
+                <span className="text-[28px] font-medium text-[#212121]">₹{selectedSizeObj?.price || 0}</span>
                 {discountPercent > 0 && (
                   <>
                     <span className="text-gray-500 line-through text-[16px]">₹{originalPrice}</span>
@@ -213,37 +231,42 @@ export function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Available Offers */}
-            <div className="fade-up mb-6">
-              <h3 className="font-medium text-[16px] mb-3">Available offers</h3>
-              <div className="space-y-2">
-                {[
-                  "Bank Offer 5% Cashback on Flipkart Axis Bank Card",
-                  "Special Price Get extra 10% off (price inclusive of cashback/coupon)",
-                  "Partner Offer Sign up for Flipkart Pay Later and get Flipkart Gift Card worth up to ₹500"
-                ].map((offer, i) => (
-                  <div key={i} className="flex gap-2 items-start">
-                    <Tag className="w-4 h-4 text-[#388e3c] shrink-0 mt-0.5 fill-current" />
-                    <span className="text-[14px]">
-                      <span className="font-medium">{offer.split(' ')[0]} {offer.split(' ')[1]}</span> {offer.split(' ').slice(2).join(' ')}
-                      <span className="text-[#2874f0] font-medium cursor-pointer ml-1">T&C</span>
-                    </span>
-                  </div>
-                ))}
+            {/* Colors */}
+            {isHierarchical && parsedSizes.length > 0 && (
+              <div className="fade-up flex items-start gap-12 mb-6 py-4 border-t border-gray-200">
+                <span className="text-gray-500 font-medium w-16 shrink-0">Color</span>
+                <div className="flex flex-wrap gap-3">
+                  {parsedSizes.map((variant, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => {
+                        setSelectedVariantIdx(idx);
+                        setSelectedSizeIdx(0);
+                      }}
+                      className={`px-4 py-1.5 border transition-all ${
+                        selectedVariantIdx === idx 
+                          ? 'border-[#2874f0] text-[#2874f0] font-medium' 
+                          : 'border-gray-300 text-gray-700 hover:border-gray-400'
+                      }`}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Sizes/Variants */}
-            {product.sizes && product.sizes.length > 0 && (
+            {currentSizesArray && currentSizesArray.length > 0 && (
               <div className="fade-up flex items-start gap-12 mb-6 py-4 border-t border-gray-200">
                 <span className="text-gray-500 font-medium w-16 shrink-0">Size</span>
                 <div className="flex flex-wrap gap-3">
-                  {product.sizes.map(sizeObj => (
+                  {currentSizesArray.map((sizeObj, idx) => (
                     <button 
-                      key={sizeObj.size}
-                      onClick={() => setSelectedSize(sizeObj)}
+                      key={idx}
+                      onClick={() => setSelectedSizeIdx(idx)}
                       className={`px-4 py-1.5 border transition-all ${
-                        selectedSize?.size === sizeObj.size 
+                        selectedSizeIdx === idx 
                           ? 'border-[#2874f0] text-[#2874f0] font-medium' 
                           : 'border-gray-300 text-gray-700 hover:border-gray-400'
                       }`}
@@ -256,7 +279,7 @@ export function ProductDetailPage() {
             )}
 
             {/* Delivery */}
-            <div className="fade-up flex items-start gap-12 mb-6">
+            <div className="fade-up flex items-start gap-12 mb-6 border-t border-gray-200 pt-4">
               <span className="text-gray-500 font-medium w-16 shrink-0 mt-1">Delivery</span>
               <div className="flex-1">
                 <div className="flex items-center border-b-2 border-[#2874f0] w-64 pb-1 mb-2">
@@ -266,7 +289,7 @@ export function ProductDetailPage() {
                     placeholder="Enter Delivery Pincode" 
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
-                    className="flex-1 outline-none text-[14px] placeholder-gray-400 font-medium" 
+                    className="flex-1 outline-none text-[14px] placeholder-gray-400 font-medium bg-transparent" 
                     maxLength={6}
                   />
                   <button className="text-[#2874f0] font-medium text-[14px]">Check</button>
@@ -276,46 +299,16 @@ export function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Highlights & Services */}
-            <div className="fade-up flex flex-col md:flex-row gap-6 md:gap-12 py-6 border-t border-b border-gray-100 mb-6">
-              <div className="flex items-start gap-12 md:w-1/2">
-                <span className="text-gray-500 font-medium w-16 shrink-0">Highlights</span>
-                <ul className="list-disc pl-4 space-y-1.5 text-[14px]">
-                  <li>Premium Quality Material</li>
-                  <li>Authentic & Traditional Design</li>
-                  <li>Perfect for everyday use</li>
-                  <li>Easy to maintain</li>
-                </ul>
-              </div>
-              <div className="flex items-start gap-12 md:w-1/2">
-                <span className="text-gray-500 font-medium w-16 shrink-0">Services</span>
-                <ul className="space-y-3 text-[14px] text-gray-800">
-                  <li className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
-                      <RefreshCcw className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <span className="font-medium">7 Days Replacement Policy</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
-                      <Banknote className="w-4 h-4 text-green-600" />
-                    </div>
-                    <span className="font-medium">Cash on Delivery available</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
             {/* Product Description */}
-            <div className="fade-up mb-10">
+            <div className="fade-up mb-10 border-t border-gray-200 pt-6">
               <h2 className="font-bold text-[20px] text-gray-900 mb-4">Product Description</h2>
-              <div className="text-[15px] text-gray-600 leading-relaxed">
+              <div className="text-[15px] text-gray-600 leading-relaxed whitespace-pre-wrap">
                 {product.description || "Experience the perfect blend of tradition and quality. This product is carefully crafted to meet your daily needs while maintaining an authentic feel. Suitable for all occasions and built to last."}
               </div>
             </div>
 
             {/* Specifications */}
-            <div className="fade-up mb-10">
+            <div className="fade-up mb-10 border-t border-gray-200 pt-6">
               <h2 className="font-bold text-[20px] text-gray-900 mb-4">Specifications</h2>
               <div>
                 <div className="font-medium text-[16px] mb-4 text-gray-800">General</div>
@@ -325,54 +318,22 @@ export function ProductDetailPage() {
                       <td className="py-3 text-gray-500 w-32 md:w-48">Category</td>
                       <td className="py-3 font-medium text-gray-900">{product.category || 'General'}</td>
                     </tr>
-                    {product.color && (
+                    {currentVariant?.color && (
                       <tr className="align-top border-b border-gray-100">
                         <td className="py-3 text-gray-500 w-32 md:w-48">Color</td>
-                        <td className="py-3 font-medium text-gray-900">{product.color}</td>
+                        <td className="py-3 font-medium text-gray-900">{currentVariant.color}</td>
                       </tr>
                     )}
-                    {product.model && (
-                      <tr className="align-top border-b border-gray-100">
-                        <td className="py-3 text-gray-500 w-32 md:w-48">Model</td>
-                        <td className="py-3 font-medium text-gray-900">{product.model}</td>
+                    {Object.entries(customAttrs).map(([key, value]) => (
+                      <tr key={key} className="align-top border-b border-gray-100">
+                        <td className="py-3 text-gray-500 w-32 md:w-48 capitalize">{key.replace(/_/g, ' ')}</td>
+                        <td className="py-3 font-medium text-gray-900">
+                           {String(value).startsWith('http') ? <a href={value} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">View Document/Image</a> : value}
+                        </td>
                       </tr>
-                    )}
-                    <tr className="align-top border-b border-gray-100">
-                      <td className="py-3 text-gray-500 w-32 md:w-48">Pack Of</td>
-                      <td className="py-3 font-medium text-gray-900">1</td>
-                    </tr>
+                    ))}
                   </tbody>
                 </table>
-              </div>
-            </div>
-
-            {/* Ratings & Reviews */}
-            <div className="fade-up mb-10">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="font-bold text-[20px] text-gray-900">Ratings & Reviews</h2>
-                <button className="bg-white text-[#fe6603] px-5 py-2 rounded-full font-bold border border-[#fe6603]/30 hover:bg-orange-50 transition-colors text-sm">Rate Product</button>
-              </div>
-              <div className="flex flex-col md:flex-row gap-8 items-center bg-gray-50 rounded-2xl p-8">
-                <div className="text-center">
-                  <div className="text-[40px] font-bold text-gray-900 flex items-center justify-center gap-2">4.5 <Star className="w-8 h-8 fill-current text-[#fe6603]" /></div>
-                  <div className="text-gray-500 text-[14px] mt-2 font-medium">1,245 Ratings &</div>
-                  <div className="text-gray-500 text-[14px] font-medium">142 Reviews</div>
-                </div>
-                <div className="flex-1 w-full max-w-sm space-y-2.5">
-                  {[5, 4, 3, 2, 1].map((star, idx) => (
-                    <div key={star} className="flex items-center gap-3 text-[13px] font-medium">
-                      <span className="w-3 text-gray-700">{star}</span>
-                      <Star className="w-3 h-3 fill-current text-gray-400 shrink-0" />
-                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full ${star >= 4 ? 'bg-brand-green' : star === 3 ? 'bg-[#ff9f00]' : 'bg-[#ff6161]'}`} 
-                          style={{ width: `${[70, 20, 5, 3, 2][idx]}%` }}
-                        />
-                      </div>
-                      <span className="text-gray-500 w-10 text-right">{[876, 245, 65, 34, 25][idx]}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
 

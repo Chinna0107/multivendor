@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { AppLayout } from './components/AppLayout';
 import { SplashScreen } from './components/SplashScreen';
 import { useStoreData } from './store/useStoreData';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { HomePage } from './pages/HomePage';
 import { CategoryListingPage } from './pages/CategoryListingPage';
@@ -36,6 +38,21 @@ import { AdminBannersPage } from './pages/admin/AdminBannersPage';
 import { AdminCouponsPage } from './pages/admin/AdminCouponsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage';
+import { AdminVendorRequestsPage } from './pages/admin/AdminVendorRequestsPage';
+import { AdminVendorProfilesPage } from './pages/admin/AdminVendorProfilesPage';
+import { AdminVendorProductsPage } from './pages/admin/AdminVendorProductsPage';
+import { AdminVendorWalletsPage } from './pages/admin/AdminVendorWalletsPage';
+import { AdminVendorOrdersPage } from './pages/admin/AdminVendorOrdersPage';
+
+import { VendorLayout } from './components/vendor/VendorLayout';
+import { VendorLoginPage } from './pages/vendor/VendorLoginPage';
+import { VendorSignupPage } from './pages/vendor/VendorSignupPage';
+import { VendorDashboardPage } from './pages/vendor/VendorDashboardPage';
+import { VendorProductsPage } from './pages/vendor/VendorProductsPage';
+import { VendorOrdersPage } from './pages/vendor/VendorOrdersPage';
+import { VendorCategoriesPage } from './pages/vendor/VendorCategoriesPage';
+import { VendorWalletPage } from './pages/vendor/VendorWalletPage';
+import { VendorProfilePage } from './pages/vendor/VendorProfilePage';
 
 function PageTransition({ children }) {
   return (
@@ -96,6 +113,8 @@ function App() {
             {/* Auth pages — no layout */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/vendor-login" element={<VendorLoginPage />} />
+            <Route path="/vendor-signup" element={<VendorSignupPage />} />
 
             {/* Admin — using AdminLayout */}
             <Route path="/admin/*" element={
@@ -109,8 +128,27 @@ function App() {
                   <Route path="banners" element={<AdminBannersPage />} />
                   <Route path="/coupons" element={<AdminCouponsPage />} />
                   <Route path="/reports" element={<AdminReportsPage />} />
+                  <Route path="vendor-requests" element={<AdminVendorRequestsPage />} />
+                  <Route path="vendor-profiles" element={<AdminVendorProfilesPage />} />
+                  <Route path="vendor-products" element={<AdminVendorProductsPage />} />
+                  <Route path="vendor-wallets" element={<AdminVendorWalletsPage />} />
+                  <Route path="vendor-orders" element={<AdminVendorOrdersPage />} />
                 </Routes>
               </AdminLayout>
+            } />
+
+            {/* Vendor — using VendorLayout */}
+            <Route path="/vendor/*" element={
+              <VendorLayout>
+                <Routes>
+                  <Route path="/" element={<VendorDashboardPage />} />
+                  <Route path="products" element={<VendorProductsPage />} />
+                  <Route path="orders" element={<VendorOrdersPage />} />
+                  <Route path="categories" element={<VendorCategoriesPage />} />
+                  <Route path="wallet" element={<VendorWalletPage />} />
+                  <Route path="profile" element={<VendorProfilePage />} />
+                </Routes>
+              </VendorLayout>
             } />
 
             {/* App pages — with AppLayout and Page Transitions */}
@@ -122,6 +160,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </div>
+      <ToastContainer position="bottom-right" />
     </>
   );
 }

@@ -90,7 +90,7 @@ export function CheckoutPage() {
     });
   };
 
-  const COD_ADVANCE = 100;
+  const COD_ADVANCE = 1;
   const codRemaining = grandTotal - COD_ADVANCE;
 
   const createOrder = async (pMethod) => {
@@ -121,7 +121,7 @@ export function CheckoutPage() {
         return;
       }
 
-      // Amount to charge online: ₹100 for COD, full amount for prepaid
+      // Amount to charge online: ₹1 for COD, full amount for prepaid
       const chargeAmount = paymentMethod === 'cod' ? COD_ADVANCE : grandTotal;
 
       // Create Razorpay Order
@@ -370,7 +370,7 @@ export function CheckoutPage() {
                   </div>
                   <div className="flex-1" onClick={() => setPaymentMethod('cod')}>
                     <span className="text-base font-bold text-gray-900 block">Cash on Delivery</span>
-                    <span className="text-xs text-gray-500">Pay ₹100 now + ₹{Math.max(0, codRemaining).toFixed(0)} at your door</span>
+                    <span className="text-xs text-gray-500">Pay ₹1 now + ₹{Math.max(0, codRemaining).toFixed(0)} at your door</span>
                   </div>
                   <input
                     type="radio"
@@ -393,7 +393,7 @@ export function CheckoutPage() {
                   <ul className="mt-1 space-y-1">
                     <li className="text-xs text-emerald-700">✓ Pay <strong>₹{COD_ADVANCE}</strong> advance online now (via Razorpay)</li>
                     <li className="text-xs text-emerald-700">✓ Remaining <strong>₹{Math.max(0, codRemaining).toFixed(0)}</strong> is collected at your door by the delivery person</li>
-                    <li className="text-xs text-emerald-700">✓ Your order will be confirmed instantly after the ₹100 advance</li>
+                    <li className="text-xs text-emerald-700">✓ Your order will be confirmed instantly after the ₹1 advance</li>
                   </ul>
                 </div>
               </div>

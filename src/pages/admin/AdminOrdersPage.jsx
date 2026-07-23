@@ -118,7 +118,7 @@ export function AdminOrdersPage() {
       <tr class="${idx % 2 === 0 ? '' : 'alt-row'}">
         <td style="text-align: center;">${idx + 1}</td>
         <td><span style="font-weight: bold; color: #222222;">${escapeHtml(item.product?.name)}</span></td>
-        <td style="text-align: center;">${escapeHtml(item.variant?.size || '-')}</td>
+        <td style="text-align: center;">${escapeHtml((item.variant?.color ? item.variant.color + " / " : "") + (item.variant?.size || "-"))}</td>
         <td style="text-align: center;">${item.qty} </td>
         <td style="text-align: right;">₹${(item.variant?.price || item.product?.price || 0).toFixed(2)}</td>
       </tr>
@@ -356,7 +356,7 @@ export function AdminOrdersPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
-      <div className="w-8 h-8 border-4 border-brand-orange/20 border-t-[#036e26] rounded-full animate-spin" />
+      <div className="w-8 h-8 border-4 border-gray-200 border-t-[#036e26] rounded-full animate-spin" />
     </div>
   );
 
@@ -367,8 +367,8 @@ export function AdminOrdersPage() {
       {/* Page Header */}
       <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 mb-4">
         <div>
-          <h1 className="font-serif text-xl sm:text-2xl lg:text-3xl font-bold text-brand-orange">Orders</h1>
-          <p className="text-brand-orange/40 text-xs font-sans mt-0.5">{orders.length} total</p>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Orders</h1>
+          <p className="text-gray-400 text-xs mt-0.5">{orders.length} total</p>
         </div>
       </div>
 
@@ -376,10 +376,10 @@ export function AdminOrdersPage() {
       <div className="flex gap-2 mb-5 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
         {["all", ...STATUSES].map((s) => (
           <button key={s} onClick={() => setStatusFilter(s)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold font-sans capitalize transition-colors ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-colors ${
               statusFilter === s
-                ? "bg-brand-green text-white shadow-sm"
-                : "bg-white border border-brand-orange/20 text-brand-orange/60 hover:border-brand-orange/40"
+                ? "bg-[#fe6603] text-white hover:bg-[#e55c02] shadow-sm"
+                : "bg-white border border-gray-200 text-gray-900/60 hover:border-brand-orange/40"
             }`}>
             {s === "all" ? `All (${orders.length})` : `${s} (${orders.filter(o => o.status === s).length})`}
           </button>
@@ -387,8 +387,8 @@ export function AdminOrdersPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-brand-orange/10 p-10 sm:p-12 text-center">
-          <p className="text-brand-orange/50 font-sans text-sm">
+        <div className="bg-white rounded-2xl border border-gray-100 p-10 sm:p-12 text-center">
+          <p className="text-gray-500 text-sm">
             {orders.length === 0 ? "No orders yet." : `No ${statusFilter} orders.`}
           </p>
         </div>
@@ -396,64 +396,64 @@ export function AdminOrdersPage() {
         <div className="space-y-3 sm:space-y-4">
           {filtered.map((order, i) => (
             <motion.div key={order.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
-              className="bg-white rounded-2xl border border-brand-orange/10 overflow-hidden">
+              className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
 
-              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 lg:p-5 cursor-pointer hover:bg-brand-green/30 transition-colors"
+              <div className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 lg:p-5 cursor-pointer hover:bg-white/30 transition-colors"
                 onClick={() => setExpanded(expanded === order.id ? null : order.id)}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                    <span className="font-serif font-bold text-brand-orange text-sm sm:text-base">#{order.order_number || order.id}</span>
-                    <span className="text-brand-orange/50 text-[10px] sm:text-xs font-sans">
+                    <span className="font-bold text-gray-900 text-sm sm:text-base">#{order.order_number || order.id}</span>
+                    <span className="text-gray-500 text-[10px] sm:text-xs font-sans">
                       {new Date(order.created_at).toLocaleDateString("en-IN")}
                     </span>
-                    <span className={`text-[9px] sm:text-[10px] font-bold font-sans px-2 py-0.5 rounded-full ${STATUS_COLORS[order.status] || "bg-brand-green text-gray-500"}`}>
+                    <span className={`text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full ${STATUS_COLORS[order.status] || "bg-white text-gray-500"}`}>
                       {order.status}
                     </span>
                     {order.payment_method === 'cod' && (
-                      <span className="text-[9px] sm:text-[10px] font-bold font-sans px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                      <span className="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
                         COD (₹{order.total - (order.advance_paid || 0)} Pending)
                       </span>
                     )}
                   </div>
-                  <p className="text-brand-orange/60 text-[10px] sm:text-xs font-sans mt-0.5 truncate">
+                  <p className="text-gray-900/60 text-[10px] sm:text-xs mt-0.5 truncate">
                     {order.user_name || "Guest"}
                   </p>
                 </div>
-                <span className="font-serif font-bold text-[#D4AF37] text-sm sm:text-base lg:text-lg flex-shrink-0">₹{order.total}</span>
-                <ChevronDown className={`w-4 h-4 text-brand-orange/40 transition-transform flex-shrink-0 ${expanded === order.id ? "rotate-180" : ""}`} />
+                <span className="font-bold text-[#D4AF37] text-sm sm:text-base lg:text-lg flex-shrink-0">₹{order.total}</span>
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform flex-shrink-0 ${expanded === order.id ? "rotate-180" : ""}`} />
               </div>
 
               {expanded === order.id && (
                 <div className="border-t border-brand-orange/5 p-3 sm:p-4 lg:p-5 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <p className="text-[10px] font-sans text-brand-orange/40 uppercase tracking-wider mb-2">Update Status</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Update Status</p>
                       <select value={order.status} onChange={(e) => updateStatus(order.id, e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl bg-brand-green border border-brand-orange/10 text-brand-orange font-sans text-sm focus:outline-none">
+                        className="w-full px-3 py-2 rounded-xl bg-white border border-gray-100 text-gray-900 text-sm focus:outline-none">
                         {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
                       </select>
                     </div>
                     <div>
-                      <p className="text-[10px] font-sans text-brand-orange/40 uppercase tracking-wider mb-2">Shipment</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-2">Shipment</p>
                       {order.tracking_id && order.tracking_id.trim() !== "" ? (
                         <div className="space-y-2">
                           <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-xl px-3 py-2">
-                            <span className="text-green-700 font-bold font-sans text-xs truncate">AWB: {order.tracking_id}</span>
+                            <span className="text-green-700 font-bold text-xs truncate">AWB: {order.tracking_id}</span>
                             {order.tracking_link && (
                               <a href={order.tracking_link} target="_blank" rel="noopener noreferrer"
-                                className="ml-auto flex-shrink-0 text-brand-orange hover:opacity-80 transition-colors">
+                                className="ml-auto flex-shrink-0 text-gray-900 hover:opacity-80 transition-colors">
                                 <ExternalLink className="w-3.5 h-3.5" />
                               </a>
                             )}
                           </div>
                           <button onClick={() => createShipment(order.id)} disabled={shipping[order.id]}
-                            className="text-xs font-sans text-brand-orange/50 hover:text-brand-orange transition-colors underline">
+                            className="text-xs text-gray-500 hover:text-gray-900 transition-colors underline">
                             Re-create shipment
                           </button>
                         </div>
                       ) : (
                         <button onClick={() => createShipment(order.id)} disabled={shipping[order.id]}
-                          className="w-full flex items-center justify-center gap-2 bg-brand-green/10 hover:bg-brand-green/20 text-brand-orange px-4 py-2.5 rounded-xl text-sm font-semibold font-sans transition-colors disabled:opacity-50">
+                          className="w-full flex items-center justify-center gap-2 bg-gray-50 hover:bg-white/20 text-gray-900 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50">
                           {shipping[order.id] ? "Creating..." : "🚚 Create Shipment"}
                         </button>
                       )}
@@ -463,22 +463,22 @@ export function AdminOrdersPage() {
                   {/* Action Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-brand-orange/5">
                     <button onClick={() => printLabel(order)}
-                      className="flex items-center justify-center gap-1.5 bg-brand-green text-white px-3 py-2.5 rounded-xl text-xs font-semibold font-sans hover:bg-brand-green/80 transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-[#fe6603] text-white hover:bg-[#e55c02] px-3 py-2.5 rounded-xl text-xs font-semibold hover:bg-white/80 transition-colors">
                       <Printer className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Print Label</span>
                     </button>
                     <button onClick={() => notifyWhatsApp(order)}
-                      className="flex items-center justify-center gap-1.5 bg-green-500 hover:bg-green-600 text-white px-3 py-2.5 rounded-xl text-xs font-semibold font-sans transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-green-500 hover:bg-green-600 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors">
                       <MessageCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Notify WA</span>
                     </button>
                     <button onClick={() => openInvoice(order)}
-                      className="flex items-center justify-center gap-1.5 bg-[#D4AF37] hover:bg-amber-500 text-brand-orange px-3 py-2.5 rounded-xl text-xs font-semibold font-sans transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-[#D4AF37] hover:bg-amber-500 text-gray-900 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors">
                       <FileText className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Invoice</span>
                     </button>
                     <button onClick={() => sendInvoiceWhatsApp(order)}
-                      className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold font-sans transition-colors">
+                      className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors">
                       <MessageCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span className="truncate">Send Invoice</span>
                     </button>

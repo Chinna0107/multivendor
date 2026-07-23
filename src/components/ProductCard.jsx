@@ -10,11 +10,37 @@ export function ProductCard({ product, layout = 'grid' }) {
   const { addToCart } = useCartStore();
 
   const isWishlisted = wishlistItems.includes(product.id);
-  const defaultSize = product.sizes && product.sizes.length > 0 ? product.sizes[0] : { size: 'Standard', price: 0 };
-  const displayPrice = defaultSize.price;
   
-  // Use the first image from images array, fallback to image_url
-  const firstImg = (product.images && product.images.length > 0) ? product.images[0] : product.image_url;
+  let parsedSizes = [];
+  try {
+    if (typeof product.sizes === 'string') {
+      parsedSizes = JSON.parse(product.sizes);
+    } else if (Array.isArray(product.sizes)) {
+      parsedSizes = product.sizes;
+    }
+  } catch (e) {}
+
+  let defaultSize = { size: 'Standard', price: product.price || 0 };
+  let firstImg = product.image_url;
+  let color = product.color;
+
+  if (parsedSizes && parsedSizes.length > 0) {
+    if (parsedSizes[0].sizes && Array.isArray(parsedSizes[0].sizes) && parsedSizes[0].sizes.length > 0) {
+      defaultSize = parsedSizes[0].sizes[0];
+      color = parsedSizes[0].color;
+      if (parsedSizes[0].images && parsedSizes[0].images.length > 0) {
+        firstImg = parsedSizes[0].images[0];
+      }
+    } else if (parsedSizes[0].size) {
+      defaultSize = parsedSizes[0];
+    }
+  }
+
+  if (!firstImg && product.images && product.images.length > 0) {
+    firstImg = product.images[0];
+  }
+  
+  const displayPrice = defaultSize.price;
 
   const handleWishlist = (e) => {
     e.preventDefault();
@@ -76,10 +102,10 @@ export function ProductCard({ product, layout = 'grid' }) {
           <div className="flex items-center gap-1 mb-2">
             <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
             <span className="text-[10px] font-medium text-gray-500">4.5 (12)</span>
-            {product.color && (
+            {color && (
               <>
                 <span className="text-[10px] font-medium text-gray-300 px-1">•</span>
-                <span className="text-[10px] font-medium text-gray-500">{product.color}</span>
+                <span className="text-[10px] font-medium text-gray-500">{color}</span>
               </>
             )}
           </div>
@@ -137,10 +163,10 @@ export function ProductCard({ product, layout = 'grid' }) {
         <div className="flex items-center gap-1 mb-2">
           <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
           <span className="text-[10px] font-medium text-gray-500">4.5 (12)</span>
-          {product.color && (
+          {color && (
             <>
               <span className="text-[10px] font-medium text-gray-300 px-1">•</span>
-              <span className="text-[10px] font-medium text-gray-500">{product.color}</span>
+              <span className="text-[10px] font-medium text-gray-500 line-clamp-1">{color}</span>
             </>
           )}
         </div>
