@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Wallet, IndianRupee, Send } from 'lucide-react';
+import { Search, Wallet, IndianRupee, Send, Clock, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
 
 export function AdminVendorWalletsPage() {
   const [vendors, setVendors] = useState([]);
+  const [payouts, setPayouts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -15,16 +16,18 @@ export function AdminVendorWalletsPage() {
   const [payoutAmount, setPayoutAmount] = useState('');
   const [payoutLoading, setPayoutLoading] = useState(false);
 
-  const fetchVendors = async () => {
+  const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`${BACKEND_URL}/admin/vendors`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setVendors(data.vendors.filter(v => v.status === 'approved'));
-      }
+      const headers = { 'Authorization': `Bearer ${token}` };
+
+      const [vendorsRes, payoutsRes] = await Promise.all([
+        fetch(`${BACKEND_URL}/admin/vendors`, { headers }).then(r => r.json()),
+        fetch(`${BACKEND_URL}/admin/vendor-payouts`, { headers }).then(r => r.json())
+      ]);
+
+      if (vendorsRes.vendors) setVendors(vendorsRes.vendors.filter(v => v.status === 'approved'));
+      if (payoutsRes.payouts) setPayouts(payoutsRes.payouts);
     } catch (error) {
       toast.error('Failed to load vendor wallets');
     } finally {
@@ -33,7 +36,7 @@ export function AdminVendorWalletsPage() {
   };
 
   useEffect(() => {
-    fetchVendors();
+    fetchData();
   }, []);
 
   const openPayoutModal = (vendor) => {
@@ -65,7 +68,7 @@ export function AdminVendorWalletsPage() {
       if (res.ok) {
         toast.success(`₹${payoutAmount} payout processed for ${selectedVendor.store_name}`);
         setPayoutModalOpen(false);
-        fetchVendors(); // Refresh balances
+        fetchData();
       } else {
         toast.error(data.error || 'Payout failed');
       }
@@ -139,6 +142,65 @@ export function AdminVendorWalletsPage() {
               </div>
             );
           })
+        )}
+      </div>
+
+      {/* Payout History */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
+          <Clock className="w-5 h-5 text-gray-400" />
+          <h3 className="text-lg font-bold text-gray-900">Payout History</h3>
+        </div>
+
+        {loading ? (
+          <div className="p-8 text-center text-gray-400">Loading...</div>
+        ) : payouts.length === 0 ? (
+          <div className="p-8 text-center text-gray-400">
+            <Send className="w-12 h-12 mx-auto mb-3 text-gray-200" />
+            <p className="text-gray-500 font-medium">No payouts processed yet</p>
+            <p className="text-sm text-gray-400 mt-1">Payouts will appear here once you process them.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                  <th className="text-left px-6 py-3 font-medium">Vendor</th>
+                  <th className="text-left px-6 py-3 font-medium">Type</th>
+                  <th className="text-left px-6 py-3 font-medium">Amount</th>
+                  <th className="text-left px-6 py-3 font-medium">Description</th>
+                  <th className="text-left px-6 py-3 font-medium">Date</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {payouts.map(p => (
+                  <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <p className="font-semibold text-gray-900">{p.vendor_name || p.store_name || `Vendor #${p.vendor_id}`}</p>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${p.type === 'debit' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>
+                        {p.type === 'debit' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownLeft className="w-3 h-3" />}
+                        {p.type === 'debit' ? 'Payout' : 'Credit'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`font-bold ${p.type === 'debit' ? 'text-red-600' : 'text-green-600'}`}>
+                        {p.type === 'debit' ? '-' : '+'}₹{parseFloat(p.amount || 0).toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 text-xs">
+                      {p.order_number && <span className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-600 font-medium mr-1">{p.order_number}</span>}
+                      {p.description || '-'}
+                    </td>
+                    <td className="px-6 py-4 text-gray-500 text-xs">
+                      {new Date(p.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 

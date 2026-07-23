@@ -20,6 +20,7 @@ export function CheckoutPage() {
   const [step, setStep] = useState(token ? 2 : 1); // 1: Auth, 2: Address, 3: Payment
   const [address, setAddress] = useState({
     name: user?.name || '',
+    email: user?.email || '',
     line1: '',
     city: '',
     state: '',
@@ -327,6 +328,10 @@ export function CheckoutPage() {
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Mobile</label>
                     <input value={address.mobile} inputMode="numeric" maxLength={10} onChange={e => setAddress({...address, mobile: e.target.value.replace(/\D/g, '')})} className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
                   </div>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 block">Email (for order confirmation)</label>
+                  <input type="email" value={address.email} onChange={e => setAddress({...address, email: e.target.value})} placeholder="your@email.com" className="w-full text-base text-gray-700 border-b border-gray-200 py-1 focus:outline-none focus:border-brand-orange transition-colors bg-transparent" />
                 </div>
               </div>
             </div>
